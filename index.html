@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AX BIZ GROUP — CEO 마스터 플랫폼</title>
+<link rel="stylesheet" href="_axbiz-shared.css">
+<style>
+  /* ── Landing-specific overrides ── */
+  body { overflow: auto; }
+  .landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 배경 그라디언트 애니메이션 */
+  .landing::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% 30%, rgba(37,99,235,.05) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 500px at 80% 70%, rgba(124,58,237,.05) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 50% 10%, rgba(22,163,74,.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── 로고 영역 ── */
+  .lp-logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    animation: fadeDown .6s ease both;
+  }
+  .lp-logo-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 0 24px rgba(37,99,235,.25);
+  }
+  .lp-logo-text .brand {
+    font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .lp-logo-text .sub {
+    font-size: 12px; color: var(--text-2); margin-top: 2px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  /* ── 헤드라인 ── */
+  .lp-headline {
+    text-align: center;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .lp-headline h2 {
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 700; line-height: 1.25;
+    color: var(--text-1); margin-bottom: 14px;
+  }
+  .lp-headline h2 span {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .lp-headline p {
+    font-size: 15px; color: var(--text-2); max-width: 520px; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── 핵심 수치 배지 ── */
+  .lp-stats {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin: 28px 0;
+    animation: fadeUp .6s .2s ease both;
+  }
+  .lp-stat {
+    background: #ffffff; border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 20px;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow);
+  }
+  .lp-stat .val { font-size: 18px; font-weight: 700; }
+  .lp-stat .lbl { font-size: 11px; color: var(--text-2); line-height: 1.3; }
+  .lp-stat.blue .val { color: var(--blue); }
+  .lp-stat.green .val { color: var(--green); }
+  .lp-stat.purple .val { color: var(--purple); }
+  .lp-stat.yellow .val { color: var(--yellow); }
+
+  /* ── CTA 버튼 ── */
+  .lp-cta {
+    animation: fadeUp .6s .3s ease both;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .btn-enter {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    color: #fff; font-size: 16px; font-weight: 700;
+    padding: 16px 42px; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 4px 20px rgba(37,99,235,.3);
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-enter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(37,99,235,.45);
+  }
+  .btn-enter .arrow { font-size: 20px; transition: transform .15s; }
+  .btn-enter:hover .arrow { transform: translateX(4px); }
+  .cta-note { font-size: 12px; color: var(--text-3); }
+  .cta-note .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 5px; animation: pulse 2s infinite; }
+
+  /* ── 모듈 카드 그리드 ── */
+  .lp-modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    width: 100%; max-width: 860px;
+    margin: 32px 0 0;
+    animation: fadeUp .6s .4s ease both;
+  }
+  .mod-card {
+    background: #ffffff; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    text-decoration: none; color: var(--text-1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .mod-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  }
+  .mod-card:hover { border-color: rgba(37,99,235,.35); }
+  .mod-card .m-icon { font-size: 22px; }
+  .mod-card .m-name { font-size: 13px; font-weight: 600; }
+  .mod-card .m-desc { font-size: 11px; color: var(--text-2); line-height: 1.4; }
+  .mod-card.blue  { border-top: 2px solid var(--blue); }
+  .mod-card.green { border-top: 2px solid var(--green); }
+  .mod-card.purple{ border-top: 2px solid var(--purple); }
+  .mod-card.yellow{ border-top: 2px solid var(--yellow); }
+  .mod-card.cyan  { border-top: 2px solid var(--cyan); }
+  .mod-card.orange{ border-top: 2px solid var(--orange); }
+  .mod-card.red   { border-top: 2px solid var(--red); }
+
+  /* ── 하단 ── */
+  .lp-footer {
+    margin-top: 36px;
+    font-size: 11px; color: var(--text-3); text-align: center;
+    animation: fadeUp .6s .5s ease both;
+  }
+  .lp-footer a { color: var(--text-3); text-decoration: none; }
+  .lp-footer a:hover { color: var(--text-2); }
+
+  /* ── 애니메이션 ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: .4; }
+  }
+
+  /* ── 구분선 ── */
+  .lp-divider {
+    width: 100%; max-width: 860px;
+    border: none; border-top: 1px solid var(--border);
+    margin: 28px 0 0;
+  }
+  .lp-section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+    color: var(--text-3); text-transform: uppercase;
+    margin-bottom: 10px; width: 100%; max-width: 860px;
+    text-align: left;
+    animation: fadeUp .6s .4s ease both;
+  }
+</style>
+</head>
+<body>
+<div class="landing">
+
+  <!-- 로고 -->
+  <div class="lp-logo-wrap">
+    <div class="lp-logo-icon">⚡</div>
+    <div class="lp-logo-text">
+      <div class="brand">AX BIZ GROUP</div>
+      <div class="sub">CEO 마스터 플랫폼 v2.0</div>
+    </div>
+  </div>
+
+  <!-- 헤드라인 -->
+  <div class="lp-headline">
+    <h2>AX 시대의 <span>경영 인텔리전스</span><br>한 화면에서 모두 보다</h2>
+    <p>그룹 전략 · 프로젝트 · 재무 · AI 플랫폼 · 커뮤니티를<br>실시간으로 통합 관리하는 CEO 전용 대시보드입니다.</p>
+  </div>
+
+  <!-- 핵심 수치 -->
+  <div class="lp-stats">
+    <div class="lp-stat blue">
+      <div class="val">18</div>
+      <div class="lbl">총 프로젝트<br>진행중 11</div>
+    </div>
+    <div class="lp-stat green">
+      <div class="val">4.2억</div>
+      <div class="lbl">이번달 예상매출<br>목표 84%</div>
+    </div>
+    <div class="lp-stat purple">
+      <div class="val">247명</div>
+      <div class="lbl">AI 창업가 연합<br>목표 24.7%</div>
+    </div>
+    <div class="lp-stat yellow">
+      <div class="val">38%</div>
+      <div class="lbl">AI 플랫폼 완성도<br>Q2 MVP 목표</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="lp-cta">
+    <a href="AXBIZ_CEO_Platform.html" class="btn-enter">
+      CEO 플랫폼 입장 <span class="arrow">→</span>
+    </a>
+    <span class="cta-note"><span class="live-dot"></span>실시간 동기화 · 오늘 <span id="todayDate"></span></span>
+  </div>
+
+  <!-- 구분선 + 모듈 목록 -->
+  <hr class="lp-divider"/>
+  <div class="lp-section-label">전체 모듈 바로가기</div>
+  <div class="lp-modules">
+    <a href="AXBIZ_CEO_Platform.html" class="mod-card blue">
+      <div class="m-icon">🏠</div>
+      <div class="m-name">그룹 현황 개요</div>
+      <div class="m-desc">KPI · 긴급 알림 · 3대 축 진행 현황</div>
+    </a>
+    <a href="axbiz-strategy.html" class="mod-card cyan">
+      <div class="m-icon">🗺️</div>
+      <div class="m-name">전략 맵</div>
+      <div class="m-desc">비전 · 목표 · 전략 로드맵</div>
+    </a>
+    <a href="axbiz-proj-internal.html" class="mod-card purple">
+      <div class="m-icon">🏗️</div>
+      <div class="m-name">내부 추진 프로젝트</div>
+      <div class="m-desc">자체 개발 · 플랫폼 구축 현황</div>
+    </a>
+    <a href="axbiz-proj-client.html" class="mod-card green">
+      <div class="m-icon">🤝</div>
+      <div class="m-name">고객 프로젝트 CRM</div>
+      <div class="m-desc">고객사 파이프라인 · 계약 관리</div>
+    </a>
+    <a href="axbiz-pipeline.html" class="mod-card yellow">
+      <div class="m-icon">💼</div>
+      <div class="m-name">비즈니스 파이프라인</div>
+      <div class="m-desc">영업 기회 · 제안 · 수주 현황</div>
+    </a>
+    <a href="axbiz-aiplatform.html" class="mod-card blue">
+      <div class="m-icon">🤖</div>
+      <div class="m-name">AI 플랫폼</div>
+      <div class="m-desc">AX-OS · Builder · 5대 모듈</div>
+    </a>
+    <a href="axbiz-community.html" class="mod-card purple">
+      <div class="m-icon">👥</div>
+      <div class="m-name">AI 창업가 연합</div>
+      <div class="m-desc">커뮤니티 현황 · 모집 · 활동</div>
+    </a>
+    <a href="axbiz-finance.html" class="mod-card green">
+      <div class="m-icon">💰</div>
+      <div class="m-name">재무 / 성과</div>
+      <div class="m-desc">매출 · 비용 · 월별 실적</div>
+    </a>
+    <a href="axbiz-actions.html" class="mod-card red">
+      <div class="m-icon">⚡</div>
+      <div class="m-name">실행 우선순위</div>
+      <div class="m-desc">긴급 액션 · 결정 대기 사항</div>
+    </a>
+    <a href="axbiz-team.html" class="mod-card cyan">
+      <div class="m-icon">🧑‍💼</div>
+      <div class="m-name">팀 / 파운더</div>
+      <div class="m-desc">역할 · 책임 · 협업 현황</div>
+    </a>
+    <a href="axbiz-portfolio.html" class="mod-card orange">
+      <div class="m-icon">🌐</div>
+      <div class="m-name">플랫폼 포트폴리오</div>
+      <div class="m-desc">서비스 · 제품 · 사업 포트폴리오</div>
+    </a>
+    <a href="axbiz-insights.html" class="mod-card yellow">
+      <div class="m-icon">💡</div>
+      <div class="m-name">인사이트 제안</div>
+      <div class="m-desc">AI 분석 · 전략적 제언</div>
+    </a>
+    <a href="product/KONEC_Dashboard_UI.html" class="mod-card cyan">
+      <div class="m-icon">🏭</div>
+      <div class="m-name">KONEC AI 대시보드</div>
+      <div class="m-desc">고객사 KONEC AI 비즈니스 현황판</div>
+    </a>
+  </div>
+
+  <!-- 푸터 -->
+  <div class="lp-footer">
+    <p>AX BIZ GROUP &nbsp;·&nbsp; CEO: 심재우 대표 &nbsp;·&nbsp; <a href="axbiz-docs.html">전략 문서 📚</a> &nbsp;·&nbsp; <a href="axbiz-clients.html">고객사 대시보드 🏢</a></p>
+    <p style="margin-top:4px">© 2025–2026 AX BIZ Group. All rights reserved.</p>
+  </div>
+
+</div>
+<script>
+  const d = new Date();
+  document.getElementById('todayDate').textContent =
+    d.getFullYear() + '.' +
+    String(d.getMonth()+1).padStart(2,'0') + '.' +
+    String(d.getDate()).padStart(2,'0');
+</script>
+</body>
+</html>

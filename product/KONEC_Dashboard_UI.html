@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KONEC AI Business Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ─── Reset & Variables ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #f0f4f8;
+      --bg-card:    #ffffff;
+      --bg-hover:   #f1f5f9;
+      --border:     #e2e8f0;
+      --accent:     #2563eb;
+      --accent2:    #7c3aed;
+      --success:    #16a34a;
+      --warning:    #d97706;
+      --danger:     #dc2626;
+      --text-1:     #0f172a;
+      --text-2:     #475569;
+      --text-3:     #94a3b8;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(0,0,0,.08);
+      --font:       'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-1);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ─── Layout ─── */
+    .shell { display: flex; height: 100vh; overflow: hidden; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    .sidebar-logo {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo .brand {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sidebar-logo .sub { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+
+    .nav { padding: 12px 8px; flex: 1; }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-3);
+      padding: 10px 12px 4px;
+      text-transform: uppercase;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-2);
+      transition: background .15s, color .15s;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-1); }
+    .nav-item.active { background: rgba(37,99,235,.08); color: var(--accent); font-weight: 600; }
+    .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+    .nav-item .badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 99px;
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-2); }
+
+    /* Main */
+    .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-title { font-size: 17px; font-weight: 700; flex: 1; }
+    .home-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);font-size:15px;text-decoration:none;transition:background .15s,transform .15s;flex-shrink:0}
+    .home-btn:hover{background:rgba(37,99,235,.16);transform:translateY(-1px)}
+    .topbar-meta { font-size: 12px; color: var(--text-2); }
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(34,197,94,.1);
+      border: 1px solid rgba(34,197,94,.3);
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .5; transform: scale(.8); }
+    }
+    .btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-1);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .btn:hover { background: var(--bg-hover); border-color: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1a8fe0; border-color: #1a8fe0; }
+
+    /* Content */
+    .content { padding: 24px 28px; flex: 1; }
+
+    /* Alert Banner */
+    .alert-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(220,38,38,.3);
+      background: #fff5f5;
+      margin-bottom: 22px;
+      animation: slideIn .4s ease;
+    }
+    @keyframes slideIn { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }
+    .alert-bar .alert-icon { font-size: 18px; }
+    .alert-bar .alert-text { flex: 1; font-size: 13px; }
+    .alert-bar .alert-text strong { color: var(--danger); }
+    .alert-bar .alert-close { cursor: pointer; color: var(--text-2); font-size: 16px; }
+
+    /* KPI Grid */
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      color: var(--text-2);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .kpi-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .kpi-card.green::before  { background: var(--success); }
+    .kpi-card.blue::before   { background: var(--accent); }
+    .kpi-card.yellow::before { background: var(--warning); }
+    .kpi-card.red::before    { background: var(--danger); }
+    .kpi-card.purple::before { background: var(--accent2); }
+
+    .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .kpi-label { font-size: 12px; color: var(--text-2); font-weight: 600; }
+    .kpi-icon { font-size: 20px; }
+    .kpi-value { font-size: 28px; font-weight: 800; letter-spacing: -.5px; line-height: 1; }
+    .kpi-sub {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 8px;
+      font-size: 12px; color: var(--text-2);
+    }
+    .trend {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 12px; font-weight: 700;
+      padding: 2px 6px; border-radius: 6px;
+    }
+    .trend.up   { background: rgba(22,163,74,.1); color: var(--success); }
+    .trend.down { background: rgba(220,38,38,.1); color: var(--danger); }
+    .trend.warn { background: rgba(217,119,6,.1); color: var(--warning); }
+
+    /* Chart Grid */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .chart-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 14px; font-weight: 700; }
+    .card-meta { font-size: 11px; color: var(--text-2); }
+
+    canvas { max-height: 240px; }
+
+    /* Bottom Grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    /* Equipment Table */
+    .equip-list { display: flex; flex-direction: column; gap: 8px; }
+    .equip-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-base);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .equip-status {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .equip-status.ok      { background: var(--success); }
+    .equip-status.warn    { background: var(--warning); animation: pulse 1.5s infinite; }
+    .equip-status.danger  { background: var(--danger);  animation: pulse 1s infinite; }
+    .equip-name { flex: 1; font-size: 13px; }
+    .equip-pct  { font-size: 12px; font-weight: 700; }
+    .equip-bar-wrap {
+      width: 80px; height: 5px; background: var(--bg-hover); border-radius: 99px; overflow: hidden;
+    }
+    .equip-bar {
+      height: 100%; border-radius: 99px;
+      transition: width .8s ease;
+    }
+
+    /* Alert Feed */
+    .alert-feed { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; }
+    .alert-item {
+      display: flex; gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-base);
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      font-size: 12px;
+    }
+    .alert-item.crit  { border-color: var(--danger);  }
+    .alert-item.warn  { border-color: var(--warning); }
+    .alert-item.info  { border-color: var(--accent);  }
+    .alert-item.ok    { border-color: var(--success); }
+    .alert-item-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .alert-item-body { flex: 1; }
+    .alert-item-title { font-weight: 600; margin-bottom: 2px; }
+    .alert-item-time  { color: var(--text-2); font-size: 11px; }
+
+    /* AI Panel */
+    .ai-panel { display: flex; flex-direction: column; gap: 10px; }
+    .ai-insight {
+      padding: 12px 14px;
+      background: var(--bg-base);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      position: relative;
+    }
+    .ai-insight-header {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 13px; margin-bottom: 6px;
+    }
+    .ai-tag {
+      font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 99px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .ai-tag.high   { background: rgba(220,38,38,.1); color: var(--danger); border: 1px solid rgba(220,38,38,.25); }
+    .ai-tag.medium { background: rgba(217,119,6,.1); color: var(--warning); border: 1px solid rgba(217,119,6,.25); }
+    .ai-tag.low    { background: rgba(22,163,74,.1); color: var(--success); border: 1px solid rgba(22,163,74,.25); }
+    .ai-insight-body { color: var(--text-2); line-height: 1.6; }
+    .confidence-bar {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px;
+    }
+    .confidence-label { font-size: 11px; color: var(--text-2); white-space: nowrap; }
+    .confidence-track {
+      flex: 1; height: 4px; background: var(--bg-hover); border-radius: 99px; overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .confidence-pct { font-size: 11px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+    /* IPO Metrics */
+    .ipo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .ipo-metric {
+      padding: 12px;
+      background: var(--bg-base);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .ipo-metric-val { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+    .ipo-metric-lbl { font-size: 11px; color: var(--text-2); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .kpi-grid        { grid-template-columns: repeat(2, 1fr); }
+      .chart-grid      { grid-template-columns: 1fr; }
+      .chart-grid-3    { grid-template-columns: 1fr 1fr; }
+      .bottom-grid     { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar         { display: none; }
+      .kpi-grid        { grid-template-columns: 1fr 1fr; }
+      .chart-grid-3    { grid-template-columns: 1fr; }
+      .bottom-grid     { grid-template-columns: 1fr; }
+      .content         { padding: 16px; }
+    }
+
+    /* Animated number */
+    .counting { transition: all .5s; }
+
+    /* Tab */
+    .tab-row { display: flex; gap: 4px; margin-bottom: 14px; }
+    .tab {
+      padding: 6px 14px; border-radius: 8px; cursor: pointer;
+      font-size: 12px; font-weight: 600; color: var(--text-2);
+      border: 1px solid transparent;
+      transition: all .15s;
+    }
+    .tab.active { background: rgba(37,99,235,.08); color: var(--accent); border-color: rgba(37,99,235,.25); }
+    .tab:hover:not(.active) { background: var(--bg-hover); color: var(--text-1); }
+
+    /* Gauge Ring */
+    .gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .gauge-label { font-size: 12px; color: var(--text-2); text-align: center; }
+    .gauge-val { font-size: 18px; font-weight: 800; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="https://www.konecauto.com" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="brand" style="cursor:pointer" title="KONEC 홈페이지 열기">KONEC AI ↗</div>
+      </a>
+      <div class="sub">Business Intelligence Platform</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section-label">Overview</div>
+      <a class="nav-item active" onclick="setPage('dashboard')">
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a class="nav-item" onclick="setPage('production')">
+        <span class="icon">🏭</span> 생산 공정
+      </a>
+      <a class="nav-item" onclick="setPage('quality')">
+        <span class="icon">🎯</span> 품질 관리
+        <span class="badge">3</span>
+      </a>
+
+      <div class="nav-section-label">AI Analytics</div>
+      <a class="nav-item" onclick="setPage('predict')">
+        <span class="icon">🤖</span> AI 예측
+      </a>
+      <a class="nav-item" onclick="setPage('equipment')">
+        <span class="icon">⚙️</span> 설비 예지보전
+        <span class="badge">1</span>
+      </a>
+
+      <div class="nav-section-label">Business</div>
+      <a class="nav-item" onclick="setPage('finance')">
+        <span class="icon">💰</span> 재무 현황
+      </a>
+      <a class="nav-item" onclick="setPage('ipo')">
+        <span class="icon">📈</span> IPO 지표
+      </a>
+      <a class="nav-item" onclick="setPage('report')">
+        <span class="icon">📄</span> AI 보고서
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">K</div>
+        <div>
+          <div class="user-name">김대표</div>
+          <div class="user-role">CEO · KONEC</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <a href="../index.html" class="home-btn" title="랜딩 페이지로">🏠</a>
+      <div class="topbar-title">🏭 KONEC AI Business Dashboard</div>
+      <div class="topbar-meta" id="clock">2026-03-06 09:00:00</div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE
+      </div>
+      <button class="btn" onclick="refreshData()">⟳ 새로고침</button>
+      <button class="btn btn-primary" onclick="exportReport()">📄 AI 보고서</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Alert Banner -->
+      <div class="alert-bar" id="alertBanner">
+        <span class="alert-icon">🚨</span>
+        <div class="alert-text">
+          <strong>[긴급] 설비 경보</strong> — D라인 다이캐스팅 프레스 #3 진동값 임계치 초과. 예지보전 AI: 72시간 내 베어링 교체 권고.
+        </div>
+        <span class="alert-close" onclick="closeAlert()">✕</span>
+      </div>
+
+      <!-- ─── KPI Cards ─── -->
+      <div class="section-label">핵심 경영 지표 (Real-time KPI)</div>
+      <div class="kpi-grid">
+
+        <div class="kpi-card blue">
+          <div class="kpi-header">
+            <span class="kpi-label">오늘 생산량</span>
+            <span class="kpi-icon">🏭</span>
+          </div>
+          <div class="kpi-value" id="kpi-production">4,823</div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 6.2%</span>
+            목표 대비 96.5%
+          </div>
+        </div>
+
+        <div class="kpi-card green">
+          <div class="kpi-header">
+            <span class="kpi-label">양품률 (Quality Rate)</span>
+            <span class="kpi-icon">✅</span>
+          </div>
+          <div class="kpi-value" id="kpi-quality">98.7<span style="font-size:16px">%</span></div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 0.3%</span>
+            목표 98.5% 초과달성
+          </div>
+        </div>
+
+        <div class="kpi-card yellow">
+          <div class="kpi-header">
+            <span class="kpi-label">설비 가동률</span>
+            <span class="kpi-icon">⚙️</span>
+          </div>
+          <div class="kpi-value" id="kpi-oee">91.3<span style="font-size:16px">%</span></div>
+          <div class="kpi-sub">
+            <span class="trend warn">⚠ -1.2%</span>
+            D-3 설비 점검 필요
+          </div>
+        </div>
+
+        <div class="kpi-card green">
+          <div class="kpi-header">
+            <span class="kpi-label">이번 달 매출</span>
+            <span class="kpi-icon">💰</span>
+          </div>
+          <div class="kpi-value" id="kpi-revenue">83.2<span style="font-size:16px">억</span></div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 12.4%</span>
+            YoY 성장 (전년 동월)
+          </div>
+        </div>
+
+        <div class="kpi-card purple">
+          <div class="kpi-header">
+            <span class="kpi-label">AI 예측 불량 방지</span>
+            <span class="kpi-icon">🤖</span>
+          </div>
+          <div class="kpi-value" id="kpi-aidefect">217<span style="font-size:16px">건</span></div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 절감</span>
+            이번 달 AI 조기 차단
+          </div>
+        </div>
+
+        <div class="kpi-card red">
+          <div class="kpi-header">
+            <span class="kpi-label">현재 불량률</span>
+            <span class="kpi-icon">⚠️</span>
+          </div>
+          <div class="kpi-value" id="kpi-defect">1.3<span style="font-size:16px">%</span></div>
+          <div class="kpi-sub">
+            <span class="trend down">↓ 0.3%</span>
+            업계 평균 2.1% 대비 우수
+          </div>
+        </div>
+
+        <div class="kpi-card blue">
+          <div class="kpi-header">
+            <span class="kpi-label">납기 준수율</span>
+            <span class="kpi-icon">🚚</span>
+          </div>
+          <div class="kpi-value" id="kpi-delivery">99.2<span style="font-size:16px">%</span></div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 0.8%</span>
+            18개월 연속 99% 이상
+          </div>
+        </div>
+
+        <div class="kpi-card green">
+          <div class="kpi-header">
+            <span class="kpi-label">영업이익률</span>
+            <span class="kpi-icon">📈</span>
+          </div>
+          <div class="kpi-value" id="kpi-margin">14.8<span style="font-size:16px">%</span></div>
+          <div class="kpi-sub">
+            <span class="trend up">↑ 2.1%p</span>
+            AI 도입 후 원가절감 효과
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ─── Main Charts ─── -->
+      <div class="chart-grid">
+        <!-- Production Trend -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📊 월별 생산량 & 불량률 추이</span>
+            <div class="tab-row">
+              <div class="tab active" onclick="switchTab(this,'prod6m')">6개월</div>
+              <div class="tab" onclick="switchTab(this,'prod12m')">12개월</div>
+            </div>
+          </div>
+          <canvas id="productionChart"></canvas>
+        </div>
+
+        <!-- Quality Donut -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🎯 품질 분류</span>
+            <span class="card-meta">이번 달 기준</span>
+          </div>
+          <canvas id="qualityChart"></canvas>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:14px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+              <div style="width:10px;height:10px;border-radius:3px;background:#22c55e;flex-shrink:0"></div>
+              <span style="color:var(--text-2);flex:1">양품</span>
+              <strong>98.7%</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+              <div style="width:10px;height:10px;border-radius:3px;background:#f59e0b;flex-shrink:0"></div>
+              <span style="color:var(--text-2);flex:1">수정품</span>
+              <strong>0.8%</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+              <div style="width:10px;height:10px;border-radius:3px;background:#ef4444;flex-shrink:0"></div>
+              <span style="color:var(--text-2);flex:1">불량</span>
+              <strong>0.5%</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── 3-col Charts ─── -->
+      <div class="chart-grid-3">
+
+        <!-- Revenue -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">💰 월별 매출 추이</span>
+            <span class="card-meta">억 원</span>
+          </div>
+          <canvas id="revenueChart"></canvas>
+        </div>
+
+        <!-- OEE Radar -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">⚙️ 라인별 OEE</span>
+            <span class="card-meta">가동률 %</span>
+          </div>
+          <canvas id="oeeChart"></canvas>
+        </div>
+
+        <!-- AI Prediction -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🤖 AI 불량 예측 정확도</span>
+            <span class="card-meta">최근 30일</span>
+          </div>
+          <canvas id="aiAccChart"></canvas>
+        </div>
+
+      </div>
+
+      <!-- ─── Bottom Grid ─── -->
+      <div class="bottom-grid">
+
+        <!-- Equipment Health -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">⚙️ 설비 건강도 (Predictive)</span>
+            <span class="card-meta" style="color:var(--accent)">AI 예지보전</span>
+          </div>
+          <div class="equip-list" id="equipList"></div>
+        </div>
+
+        <!-- Alert Feed -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔔 실시간 알림</span>
+            <span class="card-meta" id="alertCount" style="color:var(--danger)">4건 미확인</span>
+          </div>
+          <div class="alert-feed" id="alertFeed"></div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🧠 AI 경영 인사이트</span>
+            <span class="card-meta" style="color:var(--accent2)">GPT-4o 분석</span>
+          </div>
+          <div class="ai-panel" id="aiInsights"></div>
+        </div>
+
+      </div>
+
+      <!-- ─── IPO Section ─── -->
+      <div class="section-label">📈 IPO 준비 현황 지표</div>
+      <div class="card" style="margin-bottom:22px;">
+        <div class="card-header">
+          <span class="card-title">KONEC IPO Readiness Dashboard</span>
+          <span class="card-meta">목표 상장: 2027년 하반기 | 주간사: 협의 중</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px;">
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--success)">3년</div>
+            <div class="ipo-metric-lbl">흑자 연속 (IPO 요건)</div>
+          </div>
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--accent)">142억</div>
+            <div class="ipo-metric-lbl">2025 순이익 (추정)</div>
+          </div>
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--accent)">987억</div>
+            <div class="ipo-metric-lbl">2025 매출 (추정)</div>
+          </div>
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--warning)">18.3x</div>
+            <div class="ipo-metric-lbl">PER (업종 평균)</div>
+          </div>
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--accent2)">2,600억</div>
+            <div class="ipo-metric-lbl">예상 시총 (밴드 中)</div>
+          </div>
+          <div class="ipo-metric">
+            <div class="ipo-metric-val" style="color:var(--success)">AI 도입</div>
+            <div class="ipo-metric-lbl">핵심 성장 스토리</div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;font-weight:700;">IPO 준비 완료도</span>
+            <span style="font-size:13px;font-weight:800;color:var(--accent)">72%</span>
+          </div>
+          <div style="height:10px;background:var(--bg-hover);border-radius:99px;overflow:hidden;">
+            <div style="width:72%;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1.5s ease;" id="ipoBar"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-2);">
+            <span>✅ 재무 감사 완료</span>
+            <span>✅ AI 스마트팩토리 구축</span>
+            <span>🔄 주간사 선정 진행 중</span>
+            <span>⬜ 증권신고서 작성</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+/* ══════════════════════════════════════════
+   DATA & STATE
+══════════════════════════════════════════ */
+const MONTHS = ['8월','9월','10월','11월','12월','1월'];
+const MONTHS12 = ['4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월','3월'];
+
+const DATA = {
+  production6m:  [3820, 4010, 3950, 4200, 4510, 4823],
+  defectRate6m:  [2.1,  1.9,  1.8,  1.6,  1.4,  1.3],
+  production12m: [3200,3350,3480,3600,3820,4010,3950,4200,4510,4780,4650,4823],
+  defectRate12m: [2.8, 2.6, 2.4, 2.3, 2.1,1.9,1.8,1.6,1.4,1.3,1.35,1.3],
+  revenue: [68.2, 71.5, 69.8, 74.3, 78.1, 83.2],
+  oee: {
+    labels: ['A라인','B라인','C라인','D라인','E라인'],
+    values: [95.2, 93.8, 97.1, 85.6, 94.3]
+  },
+  aiAcc: [91,92,93,94,93,95,96,94,96,97,96,97,98,97,98,98,97,98,99,98,99,98,99,99,98,99,98,99,97,98]
+};
+
+const EQUIPMENTS = [
+  { name: 'A라인 다이캐스팅 프레스 #1', pct: 94, status: 'ok' },
+  { name: 'B라인 다이캐스팅 프레스 #2', pct: 88, status: 'ok' },
+  { name: 'C라인 CNC 머시닝센터 #1',   pct: 97, status: 'ok' },
+  { name: 'D라인 다이캐스팅 프레스 #3', pct: 61, status: 'danger' },
+  { name: 'E라인 트리밍 프레스 #1',    pct: 79, status: 'warn' },
+  { name: 'F라인 열처리 오븐 #1',      pct: 91, status: 'ok' },
+];
+
+const ALERTS = [
+  { type:'crit', icon:'🚨', title:'D-3 프레스 진동 임계치 초과', time:'방금 전',   body:'베어링 마모 감지. 72h 내 교체 권고' },
+  { type:'warn', icon:'⚠️', title:'B-2 금형 온도 고온 경보',    time:'12분 전',  body:'금형 온도 685°C → 목표 660°C' },
+  { type:'warn', icon:'⚠️', title:'E라인 작업 속도 저하',       time:'28분 전',  body:'사이클 타임 8.2s → 목표 7.5s' },
+  { type:'info', icon:'ℹ️', title:'AI 품질 예측 모델 업데이트', time:'1시간 전', body:'예측 정확도 97.8% → 98.3%' },
+  { type:'ok',  icon:'✅', title:'월간 생산 목표 96.5% 달성',   time:'2시간 전', body:'잔여 목표 161개, 오늘 달성 가능' },
+  { type:'ok',  icon:'✅', title:'A라인 정기보전 완료',          time:'어제',     body:'A-1 프레스 예방정비 완료. 상태 우수' },
+];
+
+const AI_INSIGHTS = [
+  {
+    title: 'D라인 설비 고장 위험',
+    tag: 'high', tagLabel: '높음',
+    body: 'D-3 다이캐스팅 프레스의 진동 패턴이 72시간 내 베어링 고장을 예측합니다. 즉각 교체 시 예상 손실 방지액: 약 2,400만원',
+    confidence: 94
+  },
+  {
+    title: '3월 생산량 목표 초과 달성 예측',
+    tag: 'low', tagLabel: '낮음 (리스크)',
+    body: 'D라인 설비 정상화 시 3월 생산량이 월 목표 대비 102%로 예측됩니다. 금형 교체 일정을 3월 셋째 주로 앞당기는 것을 권고합니다.',
+    confidence: 87
+  },
+  {
+    title: '영업이익률 개선 기회 포착',
+    tag: 'medium', tagLabel: '중간',
+    body: 'B라인 금형 온도 최적화로 불량률 0.2%p 추가 절감 예상. 월 약 800만원 원가절감 효과. 파라미터 조정 권고 중.',
+    confidence: 78
+  },
+];
+
+/* ══════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════ */
+Chart.defaults.color = '#475569';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+let charts = {};
+
+function initCharts() {
+  // Production Chart
+  charts.prod = new Chart(document.getElementById('productionChart'), {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [
+        {
+          type: 'bar',
+          label: '생산량 (개)',
+          data: DATA.production6m,
+          backgroundColor: 'rgba(46,164,255,.25)',
+          borderColor: 'rgba(46,164,255,.8)',
+          borderWidth: 2,
+          borderRadius: 6,
+          yAxisID: 'y',
+        },
+        {
+          type: 'line',
+          label: '불량률 (%)',
+          data: DATA.defectRate6m,
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239,68,68,.08)',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: '#ef4444',
+          tension: 0.4,
+          yAxisID: 'y1',
+          fill: true,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 12, padding: 14 } },
+        tooltip: { backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderWidth: 1, titleColor: '#0f172a', bodyColor: '#475569' }
+      },
+      scales: {
+        x:  { grid: { color: 'rgba(71,85,105,.3)' } },
+        y:  { grid: { color: 'rgba(71,85,105,.3)' }, title: { display: true, text: '생산량 (개)' } },
+        y1: { position: 'right', grid: { display: false }, title: { display: true, text: '불량률 (%)' },
+              min: 0, max: 4,
+              ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // Quality Donut
+  charts.quality = new Chart(document.getElementById('qualityChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['양품', '수정품', '불량'],
+      datasets: [{
+        data: [98.7, 0.8, 0.5],
+        backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+        borderWidth: 0,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } }
+      }
+    }
+  });
+
+  // Revenue Bar
+  charts.revenue = new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [{
+        label: '매출 (억원)',
+        data: DATA.revenue,
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+          g.addColorStop(0, 'rgba(124,58,237,.6)');
+          g.addColorStop(1, 'rgba(124,58,237,.1)');
+          return g;
+        },
+        borderColor: '#7c3aed',
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { grid: { color: 'rgba(71,85,105,.3)' }, min: 60,
+             ticks: { callback: v => v + '억' } }
+      }
+    }
+  });
+
+  // OEE Radar
+  charts.oee = new Chart(document.getElementById('oeeChart'), {
+    type: 'radar',
+    data: {
+      labels: DATA.oee.labels,
+      datasets: [{
+        label: 'OEE %',
+        data: DATA.oee.values,
+        backgroundColor: 'rgba(46,164,255,.12)',
+        borderColor: '#2ea4ff',
+        borderWidth: 2,
+        pointBackgroundColor: '#2ea4ff',
+        pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 70, max: 100,
+          grid: { color: 'rgba(71,85,105,.3)' },
+          angleLines: { color: 'rgba(71,85,105,.3)' },
+          ticks: { stepSize: 10, backdrop: { display: false }, color: '#475569', font: { size: 10 } },
+          pointLabels: { color: '#0f172a', font: { size: 11 } }
+        }
+      }
+    }
+  });
+
+  // AI Accuracy Line
+  charts.ai = new Chart(document.getElementById('aiAccChart'), {
+    type: 'line',
+    data: {
+      labels: Array.from({length:30}, (_,i) => `D-${30-i}`),
+      datasets: [{
+        label: '예측 정확도 (%)',
+        data: DATA.aiAcc,
+        borderColor: '#7c3aed',
+        backgroundColor: 'rgba(124,58,237,.08)',
+        borderWidth: 2,
+        pointRadius: 2,
+        tension: 0.4,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 6 } },
+        y: { grid: { color: 'rgba(71,85,105,.3)' }, min: 88, max: 100,
+             ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER COMPONENTS
+══════════════════════════════════════════ */
+function renderEquip() {
+  const el = document.getElementById('equipList');
+  el.innerHTML = EQUIPMENTS.map(e => {
+    const color = e.status === 'ok' ? '#22c55e' : e.status === 'warn' ? '#f59e0b' : '#ef4444';
+    return `
+      <div class="equip-item">
+        <div class="equip-status ${e.status}"></div>
+        <div class="equip-name">${e.name}</div>
+        <div class="equip-bar-wrap">
+          <div class="equip-bar" style="width:${e.pct}%;background:${color}"></div>
+        </div>
+        <div class="equip-pct" style="color:${color}">${e.pct}%</div>
+      </div>`;
+  }).join('');
+}
+
+function renderAlerts() {
+  const el = document.getElementById('alertFeed');
+  el.innerHTML = ALERTS.map(a => `
+    <div class="alert-item ${a.type}">
+      <div class="alert-item-icon">${a.icon}</div>
+      <div class="alert-item-body">
+        <div class="alert-item-title">${a.title}</div>
+        <div style="color:var(--text-2);font-size:11px;margin-bottom:2px">${a.body}</div>
+        <div class="alert-item-time">${a.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderAI() {
+  const el = document.getElementById('aiInsights');
+  el.innerHTML = AI_INSIGHTS.map(i => `
+    <div class="ai-insight">
+      <div class="ai-insight-header">
+        <span>${i.title}</span>
+        <span class="ai-tag ${i.tag}">${i.tagLabel}</span>
+      </div>
+      <div class="ai-insight-body">${i.body}</div>
+      <div class="confidence-bar">
+        <span class="confidence-label">AI 신뢰도</span>
+        <div class="confidence-track">
+          <div class="confidence-fill" style="width:${i.confidence}%"></div>
+        </div>
+        <span class="confidence-pct">${i.confidence}%</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════
+   LIVE SIMULATION
+══════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('clock').textContent =
+    `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ` +
+    `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
+function jitter(base, pct) {
+  return (base * (1 + (Math.random() - 0.5) * pct)).toFixed(1);
+}
+
+function liveUpdate() {
+  // KPI flicker
+  const prod = Math.floor(4800 + Math.random()*80);
+  document.getElementById('kpi-production').textContent = prod.toLocaleString();
+
+  // Push new point to production chart
+  if (charts.prod) {
+    const ds = charts.prod.data.datasets;
+    ds[0].data.push(prod);
+    ds[0].data.shift();
+    ds[1].data.push(parseFloat(jitter(1.3, 0.1)));
+    ds[1].data.shift();
+    charts.prod.update('none');
+  }
+}
+
+function refreshData() {
+  liveUpdate();
+  const btn = document.querySelector('.btn');
+  btn.textContent = '✓ 갱신됨';
+  setTimeout(() => btn.textContent = '⟳ 새로고침', 1500);
+}
+
+function exportReport() {
+  alert('AI 보고서 생성 중...\n\n[KONEC 경영 AI 보고서 — 2026년 3월]\n• 생산 KPI 요약\n• AI 예측 인사이트\n• IPO 준비 현황\n• 설비 예지보전 권고\n\n실제 구현 시 PDF/PPT 자동 생성');
+}
+
+function closeAlert() {
+  const el = document.getElementById('alertBanner');
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(-10px)';
+  el.style.transition = 'all .3s';
+  setTimeout(() => el.remove(), 300);
+}
+
+function setPage(p) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  // In MVP: just highlight, full routing out of scope
+}
+
+function switchTab(el, mode) {
+  el.parentNode.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const is6m = mode === 'prod6m';
+  charts.prod.data.labels = is6m ? MONTHS : MONTHS12;
+  charts.prod.data.datasets[0].data = is6m ? DATA.production6m  : DATA.production12m;
+  charts.prod.data.datasets[1].data = is6m ? DATA.defectRate6m  : DATA.defectRate12m;
+  charts.prod.update();
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  renderEquip();
+  renderAlerts();
+  renderAI();
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(liveUpdate, 8000);
+  // Animate IPO bar
+  setTimeout(() => { document.getElementById('ipoBar').style.width = '72%'; }, 500);
+});
+</script>
+</body>
+</html>
