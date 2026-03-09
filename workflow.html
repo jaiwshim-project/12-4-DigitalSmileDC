@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 워크플로우 - 디지털스마일치과</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: #F0F4F8; }
+    .gradient-hero { background: linear-gradient(135deg, #0A2463 0%, #1e5aa8 60%, #2f98d4 100%); }
+    .section-fade { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .section-fade.visible { opacity:1; transform:none; }
+    .step-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .step-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(10,36,99,0.12); }
+    .timeline-line { position:absolute; left:32px; top:80px; bottom:0; width:2px; background:linear-gradient(to bottom, #2f98d4, #00D4AA, #F4A261, #E63946, #764ba2, #2EC4B6); }
+    .step-num { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:white; flex-shrink:0; }
+    .timer-anim { animation: timerPulse 3s ease-in-out infinite; }
+    @keyframes timerPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,0.4)} 50%{box-shadow:0 0 0 20px rgba(0,212,170,0)} }
+    .ai-badge { background:linear-gradient(135deg,#667eea,#764ba2); display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; color:white; }
+    .compare-row:nth-child(even) { background: #F8FAFC; }
+    .time-bar { height:12px; border-radius:6px; transition:width 1.5s ease; }
+    @keyframes flow2 { to { stroke-dashoffset: -24; } }
+    .data-dot { animation: dataDot 1.5s infinite; }
+    @keyframes dataDot { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:1;transform:scale(1)} }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 h-16" id="navbar" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-full">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+        <div>
+          <div class="text-white font-bold text-sm leading-tight">디지털스마일치과</div>
+          <div class="text-xs font-medium" style="color:#00D4AA;">AI 진단 플랫폼</div>
+        </div>
+      </a>
+      <ul class="hidden md:flex gap-6 items-center">
+        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm">홈</a></li>
+        <li><a href="ai-report.html" class="text-sm px-4 py-1.5 rounded-full font-semibold text-white" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트</a></li>
+        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm">연동 장비</a></li>
+        <li><a href="workflow.html" class="text-white text-sm font-semibold border-b-2 pb-0.5" style="border-color:#00D4AA;">AI 워크플로우</a></li>
+      </ul>
+      <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 border-t border-white/10">
+      <a href="index.html" class="block py-2.5 text-gray-300 border-b border-white/10 text-sm">🏠 홈</a>
+      <a href="ai-report.html" class="block py-2.5 border-b border-white/10 text-sm" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
+      <a href="equipment.html" class="block py-2.5 text-gray-300 border-b border-white/10 text-sm">🔬 연동 장비</a>
+      <a href="workflow.html" class="block py-2.5 text-white text-sm font-semibold">⚙️ AI 워크플로우</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="pt-16">
+    <div class="gradient-hero py-16 px-6 text-center">
+      <div class="max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-white mb-6" style="background:rgba(0,212,170,0.2);border:1px solid rgba(0,212,170,0.5);">
+          ⚙️ AI 분석 워크플로우
+        </div>
+        <h1 class="text-3xl md:text-5xl font-black text-white mb-4">진단부터 리포트까지<br>단 3분 27초</h1>
+        <p class="text-gray-300 text-lg mb-8">기존 1시간 구두 상담을 AI가 데이터로 정리합니다</p>
+        <!-- Timer display -->
+        <div class="inline-flex items-center justify-center w-28 h-28 rounded-full text-white font-black text-3xl timer-anim mx-auto" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
+          3:27
+        </div>
+        <div class="text-gray-400 text-sm mt-3">평균 AI 분석 완료 시간</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE WORKFLOW -->
+  <section class="py-16 px-4 bg-white">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12 section-fade">
+        <h2 class="text-2xl md:text-3xl font-black" style="color:#0A2463;">6단계 AI 분석 프로세스</h2>
+        <p class="text-gray-500 mt-2">환자 내원부터 리포트 공유까지</p>
+      </div>
+
+      <div class="relative pl-16 space-y-6">
+        <div class="timeline-line"></div>
+
+        <!-- Step 1 -->
+        <div class="step-card bg-white border border-gray-100 rounded-2xl p-6 shadow-sm section-fade">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#2f98d4,#0A2463);">1</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">📡</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">다중 장비 데이터 수집</h3>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">약 15분</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">환자가 내원하면 3가지 스캔이 병렬로 진행됩니다. 기존의 긴 X-ray 촬영 + 본뜨기 과정을 완전히 대체합니다.</p>
+              <div class="grid grid-cols-3 gap-3">
+                <div class="p-3 rounded-xl text-center" style="background:#EFF6FF;">
+                  <div class="text-lg mb-1">🔭</div>
+                  <div class="text-xs font-semibold text-blue-700">3D CT 촬영</div>
+                  <div class="text-xs text-gray-400 mt-0.5">DICOM 파일</div>
+                </div>
+                <div class="p-3 rounded-xl text-center" style="background:#ECFDF5;">
+                  <div class="text-lg mb-1">🦷</div>
+                  <div class="text-xs font-semibold text-green-700">구강 스캔</div>
+                  <div class="text-xs text-gray-400 mt-0.5">STL 파일</div>
+                </div>
+                <div class="p-3 rounded-xl text-center" style="background:#FFF7ED;">
+                  <div class="text-lg mb-1">😊</div>
+                  <div class="text-xs font-semibold text-orange-700">페이스 스캔</div>
+                  <div class="text-xs text-gray-400 mt-0.5">OBJ 파일</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card bg-white border border-gray-100 rounded-2xl p-6 shadow-sm section-fade">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#764ba2,#667eea);">2</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">🔄</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">데이터 전처리 및 통합</h3>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">자동 · 30초</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">3개 파일 포맷이 AI 엔진에 자동 업로드됩니다. 좌표계를 통일하고 데이터를 정렬·융합합니다.</p>
+              <div class="flex flex-wrap gap-3">
+                <div class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-purple-50"><span class="text-purple-500">→</span><span class="text-gray-600">DICOM 파싱</span></div>
+                <div class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-purple-50"><span class="text-purple-500">→</span><span class="text-gray-600">3D 좌표 정렬</span></div>
+                <div class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-purple-50"><span class="text-purple-500">→</span><span class="text-gray-600">노이즈 제거</span></div>
+                <div class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-purple-50"><span class="text-purple-500">→</span><span class="text-gray-600">데이터 통합</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card border-2 rounded-2xl p-6 shadow-lg section-fade" style="background:linear-gradient(135deg,rgba(0,212,170,0.03),rgba(62,146,204,0.03));border-color:#00D4AA;">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">3</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">🧠</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">AI 딥러닝 분석</h3>
+                <span class="ai-badge">핵심 단계</span>
+                <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:#D1FAE5;color:#065F46;">자동 · 2분</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">Claude Haiku 기반 AI 엔진이 통합 데이터를 분석합니다. 의료 데이터 전용 딥러닝 모델로 이상 부위를 감지합니다.</p>
+              <div class="grid md:grid-cols-2 gap-3">
+                <div class="p-3 rounded-xl" style="background:rgba(0,212,170,0.08);">
+                  <div class="font-semibold text-sm mb-2" style="color:#065F46;">구조 분석</div>
+                  <ul class="space-y-1 text-xs text-gray-600">
+                    <li>✓ 치아별 구조 세그멘테이션</li>
+                    <li>✓ 골밀도 수치화 (HU 기반)</li>
+                    <li>✓ 신경관 3D 추적</li>
+                  </ul>
+                </div>
+                <div class="p-3 rounded-xl" style="background:rgba(62,146,204,0.08);">
+                  <div class="font-semibold text-sm mb-2" style="color:#1D4ED8;">이상 감지</div>
+                  <ul class="space-y-1 text-xs text-gray-600">
+                    <li>✓ 충치·파절 자동 탐지</li>
+                    <li>✓ 치주질환 지수 산출</li>
+                    <li>✓ 위험 부위 색상 표시</li>
+                  </ul>
+                </div>
+                <div class="p-3 rounded-xl" style="background:rgba(244,162,97,0.08);">
+                  <div class="font-semibold text-sm mb-2" style="color:#92400E;">예측 모델</div>
+                  <ul class="space-y-1 text-xs text-gray-600">
+                    <li>✓ 5년 구강 건강 예측</li>
+                    <li>✓ 치료 우선순위 계산</li>
+                    <li>✓ 비용-효과 시나리오</li>
+                  </ul>
+                </div>
+                <div class="p-3 rounded-xl" style="background:rgba(230,57,70,0.08);">
+                  <div class="font-semibold text-sm mb-2" style="color:#991B1B;">심미 분석</div>
+                  <ul class="space-y-1 text-xs text-gray-600">
+                    <li>✓ 안면 대칭성 점수</li>
+                    <li>✓ 미소 라인 평가</li>
+                    <li>✓ 치료 후 시뮬레이션</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card bg-white border border-gray-100 rounded-2xl p-6 shadow-sm section-fade">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#F4A261,#E63946);">4</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">📊</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">시각적 리포트 자동 생성</h3>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 font-medium">자동 · 30초</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">분석 완료 즉시 종합 리포트가 자동 생성됩니다. 6가지 차트와 치아 맵이 포함됩니다.</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">📈 건강 점수 게이지</span>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">🦷 치아 상태 맵</span>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">🦴 골밀도 차트</span>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">⚠️ 위험 레이더</span>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">📈 5년 예측</span>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 font-medium">🎯 치료 우선순위</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-card bg-white border border-gray-100 rounded-2xl p-6 shadow-sm section-fade">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#764ba2,#667eea);">5</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">👨‍⚕️</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">원장 검토 및 확정</h3>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">약 5분</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed">AI 소견을 원장님이 최종 검토합니다. AI는 보조 도구이며, 최종 진단과 치료 결정은 항상 의사가 합니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-card bg-white border border-gray-100 rounded-2xl p-6 shadow-sm section-fade">
+          <div class="flex items-start gap-4">
+            <div class="step-num absolute -left-px" style="background:linear-gradient(135deg,#2EC4B6,#00D4AA);">6</div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="text-xl">🤝</span>
+                <h3 class="font-black text-lg" style="color:#0A2463;">환자와 리포트 공유</h3>
+                <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:#D1FAE5;color:#065F46;">상담 단계</span>
+              </div>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">태블릿 또는 환자 스마트폰으로 리포트를 공유합니다. 환자가 데이터를 직접 보고 치료를 결정합니다.</p>
+              <div class="grid grid-cols-4 gap-2">
+                <div class="p-2 rounded-lg text-center" style="background:#EFF6FF;"><div class="text-lg">💻</div><div class="text-xs text-gray-500 mt-1">태블릿</div></div>
+                <div class="p-2 rounded-lg text-center" style="background:#ECFDF5;"><div class="text-lg">📱</div><div class="text-xs text-gray-500 mt-1">모바일</div></div>
+                <div class="p-2 rounded-lg text-center" style="background:#FFF7ED;"><div class="text-lg">📄</div><div class="text-xs text-gray-500 mt-1">PDF</div></div>
+                <div class="p-2 rounded-lg text-center" style="background:#F5F3FF;"><div class="text-lg">📧</div><div class="text-xs text-gray-500 mt-1">이메일</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TIME COMPARISON CHART -->
+  <section class="py-16 px-4 bg-gray-50">
+    <div class="max-w-4xl mx-auto section-fade">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-black" style="color:#0A2463;">각 단계별 소요 시간</h2>
+        <p class="text-gray-500 mt-2">AI 자동화로 의사의 판단 시간을 집중시킵니다</p>
+      </div>
+      <canvas id="timeChart" height="100"></canvas>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="py-16 px-4 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-10 section-fade">
+        <h2 class="text-2xl md:text-3xl font-black" style="color:#0A2463;">기존 방식 vs AI 방식 상세 비교</h2>
+      </div>
+      <div class="overflow-x-auto section-fade">
+        <table class="w-full text-sm">
+          <thead>
+            <tr style="background:#0A2463;">
+              <th class="text-left p-4 text-white font-semibold rounded-tl-xl">비교 항목</th>
+              <th class="p-4 text-gray-300 font-semibold">❌ 기존 방식</th>
+              <th class="p-4 font-semibold rounded-tr-xl" style="color:#00D4AA;">✅ AI 진단 플랫폼</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">진단 소요 시간</td>
+              <td class="p-4 text-center text-red-500 font-medium">30-60분</td>
+              <td class="p-4 text-center font-bold" style="color:#00D4AA;">3분 27초</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">데이터 통합 분석</td>
+              <td class="p-4 text-center text-gray-500">장비별 개별 확인</td>
+              <td class="p-4 text-center font-bold" style="color:#0A2463;">7개 장비 통합 자동화</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">환자 이해도</td>
+              <td class="p-4 text-center text-red-400">낮음 (구두 설명)</td>
+              <td class="p-4 text-center font-bold" style="color:#00D4AA;">높음 (시각적 데이터)</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">과잉 치료 의심</td>
+              <td class="p-4 text-center text-red-400">빈번히 발생</td>
+              <td class="p-4 text-center font-bold" style="color:#00D4AA;">데이터로 완전 해소</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">미래 예측</td>
+              <td class="p-4 text-center text-gray-500">불가</td>
+              <td class="p-4 text-center font-bold" style="color:#0A2463;">5년 시나리오 자동 생성</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">치료 상담 전환율</td>
+              <td class="p-4 text-center text-red-500">낮음</td>
+              <td class="p-4 text-center font-bold" style="color:#00D4AA;">30-50% 향상 예측</td>
+            </tr>
+            <tr class="compare-row border-b border-gray-100">
+              <td class="p-4 font-medium text-gray-700">리포트 공유</td>
+              <td class="p-4 text-center text-gray-500">불가</td>
+              <td class="p-4 text-center font-bold" style="color:#0A2463;">PDF / 모바일 / QR</td>
+            </tr>
+            <tr class="compare-row">
+              <td class="p-4 font-medium text-gray-700 rounded-bl-xl">원장 상담 부담</td>
+              <td class="p-4 text-center text-red-400">높음 (설명 주도)</td>
+              <td class="p-4 text-center font-bold rounded-br-xl" style="color:#00D4AA;">낮음 (AI가 설명 보조)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA SECURITY -->
+  <section class="py-16 px-4" style="background:linear-gradient(135deg,#0A2463,#1e5aa8);">
+    <div class="max-w-4xl mx-auto section-fade">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-black text-white">데이터 보안 및 개인정보 보호</h2>
+        <p class="text-gray-400 mt-2">환자 데이터는 최고 수준의 보안으로 보호됩니다</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white/8 border border-white/15 rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🔐</div>
+          <div class="font-bold text-white mb-2">암호화 저장</div>
+          <div class="text-xs text-gray-400 leading-relaxed">모든 환자 데이터는 AES-256 암호화로 저장됩니다. 인가된 의료진만 접근 가능합니다.</div>
+        </div>
+        <div class="bg-white/8 border border-white/15 rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🛡️</div>
+          <div class="font-bold text-white mb-2">개인정보 보호</div>
+          <div class="text-xs text-gray-400 leading-relaxed">개인정보보호법 및 의료법 기준 준수. 환자 동의 없는 데이터 공유는 절대 불가합니다.</div>
+        </div>
+        <div class="bg-white/8 border border-white/15 rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">📋</div>
+          <div class="font-bold text-white mb-2">의료기기 적합</div>
+          <div class="text-xs text-gray-400 leading-relaxed">국내 의료기기 소프트웨어 가이드라인 준수. AI 진단은 보조 도구로, 최종 결정은 의사가 합니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 px-4 bg-white text-center section-fade">
+    <h2 class="text-2xl font-black mb-3" style="color:#0A2463;">직접 체험해 보세요</h2>
+    <p class="text-gray-500 mb-6">AI 워크플로우의 최종 결과물인 진단 리포트를 확인하세요</p>
+    <a href="ai-report.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-white font-bold text-lg" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트 체험하기 →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 py-8 px-6 text-center">
+    <div class="text-sm">© 2026 디지털스마일치과 AI 진단 플랫폼 · <a href="index.html" class="hover:text-white">홈으로</a></div>
+  </footer>
+
+  <script>
+    document.getElementById('menuBtn').onclick = () => document.getElementById('mobileMenu').classList.toggle('hidden');
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').style.boxShadow = window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.4)' : 'none';
+    });
+    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+    document.querySelectorAll('.section-fade').forEach(el => obs.observe(el));
+
+    Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+    new Chart(document.getElementById('timeChart'), {
+      type: 'bar',
+      data: {
+        labels: ['데이터 수집', '전처리/통합', 'AI 분석', '리포트 생성', '원장 검토', '환자 공유'],
+        datasets: [
+          {
+            label: '기존 방식 (분)',
+            data: [20, 0, 30, 0, 10, 20],
+            backgroundColor: 'rgba(230,57,70,0.6)',
+            borderRadius: 5,
+            borderSkipped: false,
+          },
+          {
+            label: 'AI 방식 (분)',
+            data: [15, 0.5, 2, 0.5, 5, 3],
+            backgroundColor: 'rgba(0,212,170,0.7)',
+            borderRadius: 5,
+            borderSkipped: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 12 } } },
+          tooltip: {
+            backgroundColor: 'rgba(10,36,99,0.9)',
+            titleColor: '#00D4AA',
+            callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}분` }
+          }
+        },
+        scales: {
+          y: { title: { display: true, text: '소요 시간 (분)' }, grid: { color: 'rgba(0,0,0,0.06)' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
