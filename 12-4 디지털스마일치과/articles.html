@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기사 보기 | 디지털스마일치과 AI 진단 플랫폼</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; }
+    .ai-badge { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .mobile-menu-item { display:block; padding:10px 0; color:rgba(255,255,255,0.8); border-bottom:1px solid rgba(255,255,255,0.1); }
+
+    /* View toggle */
+    .view-btn { transition: all 0.2s; color: #6b7280; }
+    .view-btn.active { background: #0A2463 !important; color: white !important; }
+
+    /* Article card */
+    .article-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      transition: all 0.3s ease;
+    }
+    .article-card:hover {
+      box-shadow: 0 8px 28px rgba(10,36,99,0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Thumb placeholder gradient */
+    .thumb-placeholder { background: linear-gradient(135deg, #0A2463, #2f98d4); }
+
+    /* Board row */
+    .board-row { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
+    .board-row:hover { background: #f8fbff; }
+    .board-row:last-child { border-bottom: none; }
+
+    /* Side panel */
+    .side-panel {
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .side-panel.open { transform: translateX(0); }
+
+    /* Overlay */
+    .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .overlay.visible { opacity: 1; pointer-events: auto; }
+
+    /* Tag chip */
+    .tag-chip {
+      display: inline-flex; align-items: center;
+      padding: 2px 9px; border-radius: 99px;
+      font-size: 11px; font-weight: 600;
+      background: rgba(47,152,212,0.1); color: #2f98d4;
+    }
+
+    /* Loading spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.7s linear infinite; }
+
+    /* Category colors */
+    .cat-ai      { background: rgba(102,126,234,0.12); color: #6366f1; }
+    .cat-implant { background: rgba(0,180,130,0.12);   color: #059669; }
+    .cat-ortho   { background: rgba(245,158,11,0.12);  color: #d97706; }
+    .cat-health  { background: rgba(230,57,70,0.12);   color: #E63946; }
+    .cat-tech    { background: rgba(47,152,212,0.12);  color: #2f98d4; }
+    .cat-default { background: rgba(107,114,128,0.12); color: #6b7280; }
+
+    /* line-clamp */
+    .line-clamp-1 { overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; }
+    .line-clamp-2 { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+    .line-clamp-3 { overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+        <div>
+          <div class="text-white font-bold text-sm leading-tight">디지털스마일치과</div>
+          <div class="text-xs font-medium" style="color:#00D4AA;">AI 진단 플랫폼</div>
+        </div>
+      </a>
+      <ul class="hidden md:flex gap-6 items-center">
+        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm transition-colors">홈</a></li>
+        <li><a href="ai-report.html" class="text-sm px-4 py-1.5 rounded-full font-semibold text-white transition-all" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트</a></li>
+        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm transition-colors">연동 장비</a></li>
+        <li><a href="workflow.html" class="text-gray-300 hover:text-white text-sm transition-colors">AI 워크플로우</a></li>
+        <li><a href="articles.html" class="text-white text-sm font-semibold border-b-2 pb-0.5" style="border-color:#00D4AA;">기사 보기</a></li>
+        <li><a href="https://www.digitalsmiledc.com/naver" target="_blank" class="text-sm px-4 py-1.5 rounded-full border font-medium transition-all hover:bg-white" style="border-color:#00D4AA;color:#00D4AA;">📅 네이버 예약</a></li>
+      </ul>
+      <button id="menuBtn" class="md:hidden text-white text-2xl leading-none">☰</button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 border-t border-white/10">
+      <a href="index.html" class="mobile-menu-item">🏠 홈</a>
+      <a href="ai-report.html" class="mobile-menu-item" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
+      <a href="equipment.html" class="mobile-menu-item">🔬 연동 장비</a>
+      <a href="workflow.html" class="mobile-menu-item">⚙️ AI 워크플로우</a>
+      <a href="articles.html" class="mobile-menu-item" style="color:#00D4AA;">📰 기사 보기</a>
+      <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="mobile-menu-item">📅 진료 예약</a>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <section class="pt-24 pb-10" style="background:linear-gradient(135deg,#0A2463 0%,#1a4a9e 60%,#2f98d4 100%);">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-white mb-5 ai-badge">
+        <span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+        AI 큐레이션 뉴스 &amp; 블로그
+      </div>
+      <h1 class="text-3xl md:text-4xl font-black text-white mb-3">치과 AI &amp; 최신 기사</h1>
+      <p class="text-gray-300 text-base">AI 기술, 치과 트렌드, 최신 의료 뉴스를 한곳에서 확인하세요<br>
+        <span style="color:#00D4AA;font-weight:600;">링크만 등록하면</span> Gemini AI가 자동으로 한국어 요약을 생성합니다</p>
+    </div>
+  </section>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <section class="py-10 min-h-screen" style="background:#f0f5fb;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+      <!-- Controls bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <!-- View toggle -->
+        <div class="flex items-center gap-3">
+          <div class="flex rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+            <button id="btnBoard" onclick="setView('board')"
+              class="view-btn active flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+              </svg>
+              게시판형
+            </button>
+            <button id="btnThumb" onclick="setView('thumb')"
+              class="view-btn flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              </svg>
+              썸네일형
+            </button>
+          </div>
+          <span id="articleCount" class="text-sm text-gray-400">0개의 기사</span>
+        </div>
+
+        <!-- Right controls -->
+        <div class="flex items-center gap-2">
+          <button onclick="toggleSettings()"
+            class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-500 hover:border-gray-300 hover:text-gray-700 transition-all shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            API 설정
+          </button>
+          <button onclick="openPanel()"
+            class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+            style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            기사 추가
+          </button>
+        </div>
+      </div>
+
+      <!-- API Settings (inline collapsible) -->
+      <div id="settingsPanel" class="hidden mb-6 bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(102,126,234,0.1);">
+            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-800 text-sm">Google Gemini API 키 설정</div>
+            <div class="text-xs text-gray-500 mt-0.5">Gemini AI 요약 자동 생성에 사용됩니다. 키는 브라우저 로컬에만 저장됩니다.</div>
+          </div>
+          <!-- Gemini API 가져오기 버튼 -->
+          <a href="https://aistudio.google.com/app/apikey" target="_blank"
+            class="ml-auto flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-all hover:shadow-md"
+            style="background:linear-gradient(135deg,#4285F4,#34A853);">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fff"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"/>
+            </svg>
+            API 키 가져오기
+          </a>
+        </div>
+        <div class="flex gap-2">
+          <input id="apiKeyInput" type="password" placeholder="AIza..."
+            class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 font-mono"/>
+          <button onclick="saveApiKey()"
+            class="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:shadow-md"
+            style="background:linear-gradient(135deg,#4285F4,#34A853);">저장</button>
+        </div>
+        <p id="apiKeyStatus" class="text-xs text-gray-400 mt-2"></p>
+      </div>
+
+      <!-- ===== BOARD VIEW ===== -->
+      <div id="boardView">
+        <!-- Empty state -->
+        <div id="boardEmpty" class="text-center py-20 bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <div class="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:rgba(47,152,212,0.1);">
+            <svg class="w-8 h-8" style="color:#2f98d4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-600 mb-2">등록된 기사가 없습니다</h3>
+          <p class="text-sm text-gray-400 mb-6">상단의 "기사 추가" 버튼으로 URL을 등록하면<br>AI가 자동으로 한국어 요약을 생성합니다</p>
+          <button onclick="openPanel()"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-semibold"
+            style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            첫 기사 추가하기
+          </button>
+        </div>
+
+        <!-- Board table -->
+        <div id="boardList" class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hidden">
+          <table class="w-full">
+            <thead>
+              <tr style="background:#f8faff;" class="border-b border-gray-100">
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-12">번호</th>
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">제목 / 요약</th>
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-28 hidden md:table-cell">카테고리</th>
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-24 hidden md:table-cell">날짜</th>
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-24">링크</th>
+              </tr>
+            </thead>
+            <tbody id="boardBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== THUMBNAIL VIEW ===== -->
+      <div id="thumbView" class="hidden">
+        <!-- Empty state -->
+        <div id="thumbEmpty" class="text-center py-20 bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <div class="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:rgba(47,152,212,0.1);">
+            <svg class="w-8 h-8" style="color:#2f98d4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-600 mb-2">등록된 기사가 없습니다</h3>
+          <p class="text-sm text-gray-400 mb-6">상단의 "기사 추가" 버튼으로 URL을 등록하면<br>AI가 자동으로 한국어 요약을 생성합니다</p>
+          <button onclick="openPanel()"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-semibold"
+            style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            첫 기사 추가하기
+          </button>
+        </div>
+
+        <!-- Thumbnail grid -->
+        <div id="thumbGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 hidden"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+          <div>
+            <div class="text-white font-bold">디지털스마일치과</div>
+            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
+          </div>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
+        <div class="text-sm">
+          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
+          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
+          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
+          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
+          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
+          <li><a href="articles.html" class="hover:text-white transition-colors" style="color:#00D4AA;">기사 보기</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">진료 분야</div>
+        <ul class="space-y-2 text-sm">
+          <li>임플란트</li>
+          <li>라미네이트</li>
+          <li>치아교정</li>
+          <li>AI 정밀 진단</li>
+          <li>미세현미경 치료</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
+      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ===== OVERLAY ===== -->
+  <div id="overlay" class="fixed inset-0 z-40 overlay" style="background:rgba(0,0,0,0.45);" onclick="closePanel()"></div>
+
+  <!-- ===== ADD ARTICLE SIDE PANEL ===== -->
+  <div id="sidePanel" class="fixed top-0 right-0 h-full z-50 side-panel overflow-y-auto"
+    style="width:min(500px,100vw);background:white;box-shadow:-8px 0 40px rgba(0,0,0,0.18);">
+    <div class="p-6 pb-10">
+
+      <!-- Panel header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-gray-800">기사 추가</h2>
+          <p class="text-sm text-gray-500 mt-0.5">URL과 제목 입력 → AI 자동 요약 생성</p>
+        </div>
+        <button onclick="closePanel()"
+          class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div class="space-y-4">
+
+        <!-- URL -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            기사 URL <span class="text-red-400">*</span>
+          </label>
+          <input id="inputUrl" type="url" placeholder="https://example.com/article"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
+        </div>
+
+        <!-- Title -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            제목 <span class="text-red-400">*</span>
+          </label>
+          <input id="inputTitle" type="text" placeholder="기사 또는 블로그 제목을 입력하세요"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
+        </div>
+
+        <!-- Thumbnail URL -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            썸네일 이미지 URL <span class="text-gray-400 font-normal text-xs">(선택)</span>
+          </label>
+          <input id="inputThumbnail" type="url" placeholder="https://example.com/image.jpg"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
+        </div>
+
+        <!-- Description (helps AI) -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            본문 발췌 / 메모 <span class="text-gray-400 font-normal text-xs">(선택 · 붙여넣으면 AI 요약 품질 향상)</span>
+          </label>
+          <textarea id="inputDesc" rows="3"
+            placeholder="기사 핵심 내용을 짧게 붙여넣거나 메모하세요..."
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 resize-none"></textarea>
+        </div>
+
+        <!-- AI Generate Button -->
+        <button id="btnGenerate" onclick="generateAI()"
+          class="w-full py-3 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:shadow-md"
+          style="background:linear-gradient(135deg,#667eea,#764ba2);">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          ✨ AI 요약 자동 생성 (Gemini AI)
+        </button>
+
+        <!-- AI Result Box -->
+        <div id="aiResult" class="hidden rounded-xl p-4 border" style="background:rgba(102,126,234,0.05);border-color:rgba(102,126,234,0.25);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center ai-badge">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
+              </svg>
+            </div>
+            <span class="text-xs font-bold text-purple-700">Gemini AI 생성 결과</span>
+            <span class="ml-auto text-xs text-gray-400">자동 입력됨 ↓</span>
+          </div>
+          <p id="aiSummaryPreview" class="text-sm text-gray-700 leading-relaxed border-b border-purple-100 pb-3 mb-3"></p>
+          <div class="flex flex-wrap gap-3 text-xs">
+            <div><span class="text-gray-400">카테고리:</span> <span id="aiCategoryPreview" class="font-semibold text-purple-600 ml-1"></span></div>
+            <div><span class="text-gray-400">읽기 시간:</span> <span id="aiReadTimePreview" class="font-semibold text-gray-600 ml-1"></span></div>
+          </div>
+          <div id="aiTagsPreview" class="flex flex-wrap gap-1 mt-2"></div>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-3 py-1">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-xs text-gray-400">직접 입력 또는 AI 자동 완성</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <!-- Summary manual input -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">요약</label>
+          <textarea id="inputSummary" rows="3"
+            placeholder="AI 요약 생성 후 자동 입력되거나 직접 입력하세요"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 resize-none"></textarea>
+        </div>
+
+        <!-- Category + Read Time -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">카테고리</label>
+            <select id="inputCategory"
+              class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 bg-white">
+              <option value="AI 진단">AI 진단</option>
+              <option value="임플란트">임플란트</option>
+              <option value="치아교정">치아교정</option>
+              <option value="구강건강">구강건강</option>
+              <option value="의료기술">의료기술</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">읽기 시간</label>
+            <input id="inputReadTime" type="text" placeholder="예: 3분" value="3분"
+              class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400"/>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            태그 <span class="text-gray-400 font-normal text-xs">(쉼표로 구분)</span>
+          </label>
+          <input id="inputTags" type="text" placeholder="AI, 치과, 임플란트"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
+        </div>
+
+        <!-- Submit -->
+        <button onclick="submitArticle()"
+          class="w-full py-3.5 rounded-xl text-white font-bold text-base transition-all hover:shadow-xl mt-1"
+          style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
+          게시하기 →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== SEED DATA ====================
+    const SEED_ARTICLES = [
+      {
+        id: 1001,
+        url: 'https://blog.naver.com/jaiwooshim/224210473492',
+        title: '디지털 치과의 미래 – AI 진단 플랫폼이 바꾸는 진료 패러다임',
+        thumbnail: '',
+        summary: 'AI 기반 치과 진단 플랫폼이 기존 구두 설명 방식을 데이터 중심 리포트로 전환하고 있습니다. 3D CT·구강스캐너·페이스스캐너를 통합 분석해 환자가 직접 이해할 수 있는 시각적 리포트를 제공함으로써 치료 신뢰도를 높이고 과잉 진료 의혹을 해소합니다.',
+        category: 'AI 진단',
+        readTime: '4분',
+        tags: ['AI진단', '디지털치과', '진료혁신'],
+        date: '2023-10-15'
+      },
+      {
+        id: 1002,
+        url: 'https://blog.naver.com/jaiwooshim/224209685039',
+        title: '임플란트 AI 가이드 수술 – 3D 계획부터 실제 수술까지',
+        thumbnail: '',
+        summary: '3D CT 데이터를 기반으로 AI가 임플란트 식립 위치와 각도를 사전에 계획하고, 수술 가이드를 자동 생성하는 기술이 임상에 도입되고 있습니다. 이를 통해 수술 정확도가 향상되고 시술 시간이 단축되며 환자 회복도 빨라집니다.',
+        category: '임플란트',
+        readTime: '5분',
+        tags: ['임플란트', 'AI가이드', '3DCT'],
+        date: '2023-10-14'
+      },
+      {
+        id: 1003,
+        url: 'https://blog.naver.com/jaiwooshim/224209683430',
+        title: '구강 스캐너로 달라진 치아교정 상담 – 환자 경험 개선 사례',
+        thumbnail: '',
+        summary: '구강 스캐너로 수집한 3D 치아 데이터를 활용해 교정 전후 시뮬레이션을 실시간으로 보여주는 상담 방식이 환자 만족도를 크게 높이고 있습니다. 기존의 인상 채득을 대체해 불쾌감을 줄이고 데이터 정확도를 향상시킵니다.',
+        category: '치아교정',
+        readTime: '3분',
+        tags: ['구강스캐너', '치아교정', '디지털상담'],
+        date: '2023-10-14'
+      },
+      {
+        id: 1004,
+        url: 'https://blog.naver.com/jaiwooshim/224209683708',
+        title: '페이스 스캐너와 AI – 안면 비율 분석으로 완성하는 심미 치료',
+        thumbnail: '',
+        summary: '페이스 스캐너를 통한 3D 안면 분석이 라미네이트·교정 등 심미 치료 계획의 정밀도를 높이고 있습니다. AI가 황금 비율을 기준으로 최적의 치아 형태와 배열을 제안해, 환자와 원장이 치료 목표를 공유하고 기대치를 일치시킬 수 있습니다.',
+        category: '의료기술',
+        readTime: '4분',
+        tags: ['페이스스캐너', '심미치료', '안면분석'],
+        date: '2023-10-14'
+      },
+      {
+        id: 1005,
+        url: 'https://blog.naver.com/jaiwooshim/224209684154',
+        title: '5년 구강 건강 예측 리포트 – AI가 미래를 진단하는 방법',
+        thumbnail: '',
+        summary: 'AI 진단 리포트는 현재 상태 분석에 그치지 않고 치주 질환 진행, 골소실, 충치 위험도의 5년 예측 시나리오를 제공합니다. 치료를 받을 경우와 받지 않을 경우의 예측 그래프를 환자에게 직접 보여줌으로써 치료 필요성을 스스로 납득하게 합니다.',
+        category: 'AI 진단',
+        readTime: '5분',
+        tags: ['5년예측', 'AI리포트', '구강건강'],
+        date: '2023-10-14'
+      },
+      {
+        id: 1006,
+        url: 'https://blog.naver.com/jaiwooshim/224209684425',
+        title: '원내 디지털 기공센터 CAD/CAM – 당일 보철의 현실',
+        thumbnail: '',
+        summary: '원내 CAD/CAM 시스템과 디지털 기공센터를 연동하면 크라운·인레이 등 보철물을 당일 제작·장착할 수 있습니다. 기존 2~3주 소요되던 외부 기공 과정을 AI 설계로 단축해 환자 편의와 치료 연속성을 동시에 확보합니다.',
+        category: '의료기술',
+        readTime: '3분',
+        tags: ['CAD/CAM', '당일보철', '디지털기공'],
+        date: '2023-10-14'
+      }
+    ];
+
+    // ==================== STATE ====================
+    // Initialize with seed data if localStorage is empty
+    if (!localStorage.getItem('ds_articles')) {
+      localStorage.setItem('ds_articles', JSON.stringify(SEED_ARTICLES));
+    }
+    let articles = JSON.parse(localStorage.getItem('ds_articles') || '[]');
+    let currentView = 'board';
+
+    // ==================== INIT ====================
+    function init() {
+      // Navbar mobile
+      document.getElementById('menuBtn').onclick = () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+      };
+
+      // Navbar scroll shadow
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').style.boxShadow =
+          window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.4)' : 'none';
+      });
+
+      // Load saved API key status
+      const savedKey = localStorage.getItem('ds_gemini_key');
+      if (savedKey) {
+        document.getElementById('apiKeyInput').value = savedKey;
+        const st = document.getElementById('apiKeyStatus');
+        st.textContent = '✓ Gemini API 키가 저장되어 있습니다';
+        st.style.color = '#10b981';
+      }
+
+      renderArticles();
+    }
+
+    // ==================== VIEW TOGGLE ====================
+    function setView(view) {
+      currentView = view;
+      const boardView = document.getElementById('boardView');
+      const thumbView = document.getElementById('thumbView');
+      const btnBoard  = document.getElementById('btnBoard');
+      const btnThumb  = document.getElementById('btnThumb');
+
+      if (view === 'board') {
+        boardView.classList.remove('hidden');
+        thumbView.classList.add('hidden');
+        btnBoard.classList.add('active');
+        btnBoard.style.background = '#0A2463';
+        btnBoard.style.color = 'white';
+        btnThumb.classList.remove('active');
+        btnThumb.style.background = '';
+        btnThumb.style.color = '';
+      } else {
+        boardView.classList.add('hidden');
+        thumbView.classList.remove('hidden');
+        btnThumb.classList.add('active');
+        btnThumb.style.background = '#0A2463';
+        btnThumb.style.color = 'white';
+        btnBoard.classList.remove('active');
+        btnBoard.style.background = '';
+        btnBoard.style.color = '';
+      }
+    }
+
+    // ==================== SETTINGS ====================
+    function toggleSettings() {
+      document.getElementById('settingsPanel').classList.toggle('hidden');
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      if (!key) return;
+      localStorage.setItem('ds_gemini_key', key);
+      const st = document.getElementById('apiKeyStatus');
+      st.textContent = '✓ Gemini API 키가 저장되었습니다';
+      st.style.color = '#10b981';
+    }
+
+    // ==================== PANEL ====================
+    function openPanel() {
+      const pw = prompt('관리자 비밀번호를 입력하세요:');
+      if (pw !== '1234') {
+        if (pw !== null) showToast('비밀번호가 올바르지 않습니다', 'error');
+        return;
+      }
+      document.getElementById('sidePanel').classList.add('open');
+      document.getElementById('overlay').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePanel() {
+      document.getElementById('sidePanel').classList.remove('open');
+      document.getElementById('overlay').classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+
+    // ==================== AI GENERATE (Google Gemini) ====================
+    async function generateAI() {
+      const url   = document.getElementById('inputUrl').value.trim();
+      const title = document.getElementById('inputTitle').value.trim();
+      const desc  = document.getElementById('inputDesc').value.trim();
+
+      if (!url || !title) {
+        showToast('URL과 제목을 먼저 입력해주세요', 'error');
+        return;
+      }
+
+      const apiKey = localStorage.getItem('ds_gemini_key');
+      if (!apiKey) {
+        showToast('Gemini API 키를 먼저 설정해주세요 (API 설정 버튼)', 'error');
+        document.getElementById('settingsPanel').classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('btnGenerate');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Gemini AI 분석 중...`;
+
+      try {
+        const prompt = `다음 기사/블로그 정보를 바탕으로 치과 AI 플랫폼에 게시할 한국어 메타데이터를 생성하세요.
+
+URL: ${url}
+제목: ${title}
+설명/발췌: ${desc || '없음'}
+
+아래 JSON 형식으로만 응답하세요 (JSON 외 텍스트 없이, 마크다운 코드블록 없이):
+{
+  "summary": "기사 내용을 2~3문장으로 요약. 치과·의료·AI 기술 관련 핵심 내용 위주로 한국어로 작성.",
+  "category": "AI 진단, 임플란트, 치아교정, 구강건강, 의료기술, 기타 중 하나만 선택",
+  "tags": ["태그1", "태그2", "태그3"],
+  "readingTime": "예상 읽기 시간 (예: 3분)"
+}`;
+
+        const resp = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.3, maxOutputTokens: 512 }
+            })
+          }
+        );
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.error?.message || `HTTP ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (!raw) throw new Error('Gemini 응답이 비어 있습니다');
+
+        // Strip markdown code blocks if present
+        const jsonStr = raw.replace(/^```json?\s*/m, '').replace(/```\s*$/m, '').trim();
+        const gen = JSON.parse(jsonStr);
+
+        // Show preview
+        document.getElementById('aiSummaryPreview').textContent  = gen.summary;
+        document.getElementById('aiCategoryPreview').textContent = gen.category;
+        document.getElementById('aiReadTimePreview').textContent = gen.readingTime;
+
+        const tagsBox = document.getElementById('aiTagsPreview');
+        tagsBox.innerHTML = '';
+        (gen.tags || []).forEach(t => {
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip';
+          chip.textContent = '#' + t;
+          tagsBox.appendChild(chip);
+        });
+
+        document.getElementById('aiResult').classList.remove('hidden');
+
+        // Auto-fill form fields
+        document.getElementById('inputSummary').value  = gen.summary;
+        document.getElementById('inputReadTime').value = gen.readingTime;
+        document.getElementById('inputTags').value     = (gen.tags || []).join(', ');
+
+        const catSelect = document.getElementById('inputCategory');
+        const validCats = ['AI 진단', '임플란트', '치아교정', '구강건강', '의료기술', '기타'];
+        if (validCats.includes(gen.category)) catSelect.value = gen.category;
+
+        showToast('AI 요약이 생성되었습니다!', 'success');
+
+      } catch (err) {
+        console.error(err);
+        showToast('생성 실패: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          ✨ AI 요약 자동 생성 (Gemini AI)`;
+      }
+    }
+
+    // ==================== SUBMIT ====================
+    function submitArticle() {
+      const url      = document.getElementById('inputUrl').value.trim();
+      const title    = document.getElementById('inputTitle').value.trim();
+      const thumbnail= document.getElementById('inputThumbnail').value.trim();
+      const summary  = document.getElementById('inputSummary').value.trim();
+      const category = document.getElementById('inputCategory').value;
+      const readTime = document.getElementById('inputReadTime').value.trim() || '3분';
+      const tagsRaw  = document.getElementById('inputTags').value.trim();
+
+      if (!url || !title) {
+        showToast('URL과 제목은 필수입니다', 'error');
+        return;
+      }
+
+      const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+      const article = {
+        id: Date.now(),
+        url,
+        title,
+        thumbnail,
+        summary: summary || '기사 내용을 확인하려면 링크를 클릭하세요.',
+        category,
+        readTime,
+        tags,
+        date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '-').replace(/ /g, '').replace(/-$/, '')
+      };
+
+      articles.unshift(article);
+      localStorage.setItem('ds_articles', JSON.stringify(articles));
+
+      closePanel();
+      resetForm();
+      renderArticles();
+      showToast('기사가 등록되었습니다!', 'success');
+    }
+
+    function resetForm() {
+      ['inputUrl','inputTitle','inputThumbnail','inputDesc','inputSummary','inputTags'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('inputReadTime').value = '3분';
+      document.getElementById('inputCategory').value = 'AI 진단';
+      document.getElementById('aiResult').classList.add('hidden');
+    }
+
+    // ==================== RENDER ====================
+    function renderArticles() {
+      document.getElementById('articleCount').textContent = `${articles.length}개의 기사`;
+      renderBoard();
+      renderThumb();
+    }
+
+    function catClass(cat) {
+      const map = {
+        'AI 진단': 'cat-ai',
+        '임플란트': 'cat-implant',
+        '치아교정': 'cat-ortho',
+        '구강건강': 'cat-health',
+        '의료기술': 'cat-tech'
+      };
+      return map[cat] || 'cat-default';
+    }
+
+    function renderBoard() {
+      const empty = document.getElementById('boardEmpty');
+      const list  = document.getElementById('boardList');
+      const body  = document.getElementById('boardBody');
+
+      if (articles.length === 0) {
+        empty.classList.remove('hidden');
+        list.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      list.classList.remove('hidden');
+
+      body.innerHTML = articles.map((a, i) => `
+        <tr class="board-row">
+          <td class="px-5 py-4 text-sm text-gray-400 font-medium">${articles.length - i}</td>
+          <td class="px-5 py-4">
+            <a href="${esc(a.url)}" target="_blank" class="group block">
+              <div class="font-semibold text-gray-800 text-sm group-hover:text-blue-600 transition-colors line-clamp-1">${esc(a.title)}</div>
+              <div class="text-xs text-gray-400 mt-0.5 line-clamp-1">${esc(a.summary)}</div>
+            </a>
+          </td>
+          <td class="px-5 py-4 hidden md:table-cell">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${catClass(a.category)}">${esc(a.category)}</span>
+          </td>
+          <td class="px-5 py-4 text-xs text-gray-400 hidden md:table-cell">${esc(a.date)}</td>
+          <td class="px-5 py-4">
+            <div class="flex items-center gap-1.5">
+              <a href="${esc(a.url)}" target="_blank"
+                class="text-xs font-semibold px-3 py-1.5 rounded-lg text-white transition-all hover:shadow-md"
+                style="background:linear-gradient(135deg,#2f98d4,#0A2463);">보기</a>
+              <button onclick="deleteArticle(${a.id})"
+                class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all text-red-400" title="삭제">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderThumb() {
+      const empty = document.getElementById('thumbEmpty');
+      const grid  = document.getElementById('thumbGrid');
+
+      if (articles.length === 0) {
+        empty.classList.remove('hidden');
+        grid.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      grid.classList.remove('hidden');
+
+      grid.innerHTML = articles.map(a => `
+        <div class="article-card">
+          <a href="${esc(a.url)}" target="_blank" class="block">
+            ${a.thumbnail
+              ? `<div class="h-44 overflow-hidden bg-gray-100">
+                   <img src="${esc(a.thumbnail)}" alt="${esc(a.title)}"
+                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                     onerror="this.parentElement.outerHTML='<div class=\\'h-44 thumb-placeholder flex items-center justify-center\\'>🦷</div>'"/>
+                 </div>`
+              : `<div class="h-44 thumb-placeholder flex items-center justify-center">
+                   <svg class="w-14 h-14 text-white opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                       d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                   </svg>
+                 </div>`
+            }
+          </a>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${catClass(a.category)}">${esc(a.category)}</span>
+              <span class="text-xs text-gray-400 flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                ${esc(a.readTime)}
+              </span>
+            </div>
+            <a href="${esc(a.url)}" target="_blank">
+              <h3 class="font-bold text-gray-800 text-sm leading-snug mb-2 hover:text-blue-600 transition-colors line-clamp-2">${esc(a.title)}</h3>
+            </a>
+            <p class="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-3">${esc(a.summary)}</p>
+            <div class="flex flex-wrap gap-1 mb-4">
+              ${a.tags.slice(0, 3).map(t => `<span class="tag-chip">#${esc(t)}</span>`).join('')}
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+              <span class="text-xs text-gray-400">${esc(a.date)}</span>
+              <div class="flex items-center gap-1.5">
+                <a href="${esc(a.url)}" target="_blank"
+                  class="text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
+                  style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">기사 보기 →</a>
+                <button onclick="deleteArticle(${a.id})"
+                  class="w-6 h-6 rounded-md bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all text-red-400" title="삭제">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== DELETE ====================
+    function deleteArticle(id) {
+      const pw = prompt('삭제하려면 비밀번호를 입력하세요:');
+      if (pw !== '1234') {
+        if (pw !== null) showToast('비밀번호가 올바르지 않습니다', 'error');
+        return;
+      }
+      if (!confirm('이 기사를 삭제하시겠습니까?')) return;
+      articles = articles.filter(a => a.id !== id);
+      localStorage.setItem('ds_articles', JSON.stringify(articles));
+      renderArticles();
+      showToast('기사가 삭제되었습니다', 'success');
+    }
+
+    // ==================== TOAST ====================
+    function showToast(msg, type = 'success') {
+      const old = document.getElementById('toast');
+      if (old) old.remove();
+
+      const t = document.createElement('div');
+      t.id = 'toast';
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;padding:12px 20px;border-radius:12px;color:white;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);white-space:nowrap;';
+      t.style.background = type === 'success'
+        ? 'linear-gradient(135deg,#00D4AA,#2f98d4)'
+        : 'linear-gradient(135deg,#E63946,#c0392b)';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    // ==================== HTML ESCAPE ====================
+    function esc(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // ==================== START ====================
+    init();
+  </script>
+</body>
+</html>
