@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; }
     .ai-badge { background: linear-gradient(135deg, #667eea, #764ba2); }
@@ -534,16 +535,70 @@
       }
     ];
 
-    // ==================== STATE ====================
-    // Initialize with seed data if localStorage is empty
-    if (!localStorage.getItem('ds_articles')) {
-      localStorage.setItem('ds_articles', JSON.stringify(SEED_ARTICLES));
+    // ==================== SUPABASE ====================
+    const SUPABASE_URL  = 'https://haxcktfnuudlqciyljtp.supabase.co';
+    const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhheGNrdGZudXVkbHFjaXlsanRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkzMDUwNDAsImV4cCI6MjA4NDg4MTA0MH0.suN7BeaHx3MjaNlMDQa0940P-rMl2XPyk4ksoQEU3YM';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // DB 행 → JS 객체 변환 (snake_case → camelCase)
+    function rowToArticle(row) {
+      return {
+        id:        row.id,
+        url:       row.url,
+        title:     row.title,
+        thumbnail: row.thumbnail || '',
+        summary:   row.summary   || '',
+        category:  row.category  || 'AI 진단',
+        readTime:  row.read_time || '3분',
+        tags:      row.tags      || [],
+        date:      row.date      || ''
+      };
     }
-    let articles = JSON.parse(localStorage.getItem('ds_articles') || '[]');
+
+    // ==================== STATE ====================
+    let articles    = [];
     let currentView = 'board';
 
     // ==================== INIT ====================
-    function init() {
+    async function loadArticles() {
+      const { data, error } = await sb
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase 로딩 오류:', error.message);
+        showToast('기사 불러오기 실패: ' + error.message, 'error');
+        return;
+      }
+
+      if (data && data.length > 0) {
+        articles = data.map(rowToArticle);
+      } else {
+        // DB가 비어 있으면 시드 데이터 삽입
+        const seeds = SEED_ARTICLES.map(a => ({
+          url:       a.url,
+          title:     a.title,
+          thumbnail: a.thumbnail || '',
+          summary:   a.summary   || '',
+          category:  a.category  || 'AI 진단',
+          read_time: a.readTime  || '3분',
+          tags:      a.tags      || [],
+          date:      a.date      || ''
+        }));
+        const { data: inserted, error: insertErr } = await sb
+          .from('articles')
+          .insert(seeds)
+          .select();
+        if (insertErr) {
+          console.error('시드 삽입 오류:', insertErr.message);
+        } else {
+          articles = (inserted || []).map(rowToArticle);
+        }
+      }
+    }
+
+    async function init() {
       // Navbar mobile
       document.getElementById('menuBtn').onclick = () => {
         document.getElementById('mobileMenu').classList.toggle('hidden');
@@ -564,6 +619,7 @@
         st.style.color = '#10b981';
       }
 
+      await loadArticles();
       renderArticles();
     }
 
@@ -736,7 +792,7 @@ URL: ${url}
     }
 
     // ==================== SUBMIT ====================
-    function submitArticle() {
+    async function submitArticle() {
       const url      = document.getElementById('inputUrl').value.trim();
       const title    = document.getElementById('inputTitle').value.trim();
       const thumbnail= document.getElementById('inputThumbnail').value.trim();
@@ -764,8 +820,28 @@ URL: ${url}
         date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '-').replace(/ /g, '').replace(/-$/, '')
       };
 
-      articles.unshift(article);
-      localStorage.setItem('ds_articles', JSON.stringify(articles));
+      // Supabase에 저장
+      const { data: inserted, error } = await sb
+        .from('articles')
+        .insert([{
+          url:       article.url,
+          title:     article.title,
+          thumbnail: article.thumbnail,
+          summary:   article.summary,
+          category:  article.category,
+          read_time: article.readTime,
+          tags:      article.tags,
+          date:      article.date
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        showToast('저장 실패: ' + error.message, 'error');
+        return;
+      }
+
+      articles.unshift(rowToArticle(inserted));
 
       closePanel();
       resetForm();
@@ -911,15 +987,25 @@ URL: ${url}
     }
 
     // ==================== DELETE ====================
-    function deleteArticle(id) {
+    async function deleteArticle(id) {
       const pw = prompt('삭제하려면 비밀번호를 입력하세요:');
       if (pw !== '1234') {
         if (pw !== null) showToast('비밀번호가 올바르지 않습니다', 'error');
         return;
       }
       if (!confirm('이 기사를 삭제하시겠습니까?')) return;
+
+      const { error } = await sb
+        .from('articles')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        showToast('삭제 실패: ' + error.message, 'error');
+        return;
+      }
+
       articles = articles.filter(a => a.id !== id);
-      localStorage.setItem('ds_articles', JSON.stringify(articles));
       renderArticles();
       showToast('기사가 삭제되었습니다', 'success');
     }
