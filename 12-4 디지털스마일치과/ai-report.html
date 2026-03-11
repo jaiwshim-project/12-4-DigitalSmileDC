@@ -150,14 +150,14 @@
       <div class="sticky top-20 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
         <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3">리포트 목차</div>
         <nav id="tocNav" class="space-y-1">
-          <a onclick="scrollTo('secAI')" class="sidebar-link active">🧠 AI 종합 소견</a>
-          <a onclick="scrollTo('secScore')" class="sidebar-link">📊 건강 점수</a>
-          <a onclick="scrollTo('secMap')" class="sidebar-link">🦷 치아 상태 맵</a>
-          <a onclick="scrollTo('secBone')" class="sidebar-link">🦴 골밀도 분석</a>
-          <a onclick="scrollTo('secRisk')" class="sidebar-link">⚠️ 위험 요소</a>
-          <a onclick="scrollTo('secPredict')" class="sidebar-link">📈 5년 예측</a>
-          <a onclick="scrollTo('secPriority')" class="sidebar-link">🎯 치료 우선순위</a>
-          <a onclick="scrollTo('secEquip')" class="sidebar-link">🔬 장비별 소견</a>
+          <a onclick="goTo('secAI')" class="sidebar-link active">🧠 AI 종합 소견</a>
+          <a onclick="goTo('secScore')" class="sidebar-link">📊 건강 점수</a>
+          <a onclick="goTo('secMap')" class="sidebar-link">🦷 치아 상태 맵</a>
+          <a onclick="goTo('secBone')" class="sidebar-link">🦴 골밀도 분석</a>
+          <a onclick="goTo('secRisk')" class="sidebar-link">⚠️ 위험 요소</a>
+          <a onclick="goTo('secPredict')" class="sidebar-link">📈 5년 예측</a>
+          <a onclick="goTo('secPriority')" class="sidebar-link">🎯 치료 우선순위</a>
+          <a onclick="goTo('secEquip')" class="sidebar-link">🔬 장비별 소견</a>
         </nav>
       </div>
     </aside>
@@ -988,7 +988,7 @@
     }
 
     // Scroll to section
-    function scrollTo(id) {
+    function goTo(id) {
       const el = document.getElementById(id);
       if (!el) return;
       // Immediately reveal section (bypasses intersection observer delay)
