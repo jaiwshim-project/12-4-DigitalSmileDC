@@ -29,6 +29,7 @@
     .priority-card:hover { transform:translateX(4px); }
     .tab-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; color:#64748b; }
     .tab-btn.active { background:#0A2463; color:white; }
+    .mobile-menu-item { display:block; padding:10px 0; color:rgba(255,255,255,0.8); border-bottom:1px solid rgba(255,255,255,0.1); }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(4px); }
     .pulse { animation:pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
@@ -44,27 +45,37 @@
 <body>
 
   <!-- NAVBAR (no-print) -->
-  <nav class="no-print fixed top-0 left-0 right-0 z-50 h-14" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-full">
-      <a href="index.html" class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-xs" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+  <nav class="no-print fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
         <div>
-          <div class="text-white font-bold text-xs leading-tight">디지털스마일치과</div>
-          <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
+          <div class="text-white font-bold text-sm leading-tight">디지털스마일치과</div>
+          <div class="text-xs font-medium" style="color:#00D4AA;">AI 진단 플랫폼</div>
         </div>
       </a>
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="text-gray-400 hover:text-white text-xs transition-colors">← 홈으로</a>
-        <a href="equipment.html" class="text-gray-400 hover:text-white text-xs transition-colors">연동 장비</a>
-        <a href="workflow.html" class="text-gray-400 hover:text-white text-xs transition-colors">워크플로우</a>
-        <a href="articles.html" class="text-gray-400 hover:text-white text-xs transition-colors">기사 보기</a>
-        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-medium text-white" style="background:rgba(0,212,170,0.2);border:1px solid #00D4AA;color:#00D4AA;">🖨 인쇄</button>
-      </div>
+      <ul class="hidden md:flex gap-6 items-center">
+        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm transition-colors">홈</a></li>
+        <li><a href="ai-report.html" class="text-sm px-4 py-1.5 rounded-full font-semibold text-white transition-all hover:shadow-lg" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트</a></li>
+        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm transition-colors">연동 장비</a></li>
+        <li><a href="workflow.html" class="text-gray-300 hover:text-white text-sm transition-colors">AI 워크플로우</a></li>
+        <li><a href="articles.html" class="text-gray-300 hover:text-white text-sm transition-colors">기사 보기</a></li>
+        <li><a href="https://www.digitalsmiledc.com/naver" target="_blank" class="text-sm px-4 py-1.5 rounded-full border font-medium transition-all hover:bg-white" style="border-color:#00D4AA;color:#00D4AA;">📅 네이버 예약</a></li>
+      </ul>
+      <button id="menuBtn" class="md:hidden text-white text-2xl leading-none">☰</button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 border-t border-white/10">
+      <a href="index.html" class="mobile-menu-item">🏠 홈</a>
+      <a href="ai-report.html" class="mobile-menu-item" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
+      <a href="equipment.html" class="mobile-menu-item">🔬 연동 장비</a>
+      <a href="workflow.html" class="mobile-menu-item">⚙️ AI 워크플로우</a>
+      <a href="articles.html" class="mobile-menu-item">📰 기사 보기</a>
+      <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="mobile-menu-item">📅 네이버 예약</a>
     </div>
   </nav>
 
   <!-- PATIENT HEADER -->
-  <div class="pt-14">
+  <div class="pt-16">
     <div style="background:linear-gradient(135deg,#0A2463,#1e5aa8);" class="px-6 py-8">
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -947,6 +958,11 @@
     function scrollTo(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
+
+    // Mobile menu toggle
+    document.getElementById('menuBtn').onclick = () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    };
 
     // Sidebar active state
     const sections = ['secAI','secScore','secMap','secBone','secRisk','secPredict','secPriority','secEquip'];
