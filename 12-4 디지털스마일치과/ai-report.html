@@ -147,7 +147,7 @@
   </div>
 
   <!-- MAIN LAYOUT -->
-  <div class="max-w-6xl mx-auto px-4 py-6 flex gap-6">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
 
     <!-- SIDEBAR (no-print) -->
     <aside class="no-print hidden lg:block w-48 flex-shrink-0">
@@ -174,7 +174,7 @@
         <div class="ai-insight p-6">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xl">🧠</span>
-            <h2 class="text-white font-bold text-lg"><span class="font-normal mr-1" style="color:#9CA3AF;">1.</span> AI 종합 소견</h2>
+            <h2 class="text-white font-bold text-base md:text-lg"><span class="font-normal mr-1" style="color:#9CA3AF;">1.</span> AI 종합 소견</h2>
           </div>
           <p class="text-gray-200 leading-relaxed text-sm">
             3D CT, 구강스캐너, 페이스스캐너 통합 데이터 분석 결과, 전반적인 구강 건강 상태는 <strong class="text-teal-300">양호(73점)</strong> 수준입니다.
@@ -204,9 +204,9 @@
 
       <!-- B: 건강 점수 -->
       <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
-        <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">2.</span><span>📊</span> 전체 구강 건강 점수</h2>
+        <h2 class="font-bold text-base md:text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">2.</span><span>📊</span> 전체 구강 건강 점수</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
-          <div class="w-48 flex-shrink-0 relative">
+          <div class="w-40 md:w-48 flex-shrink-0 relative">
             <canvas id="gaugeChart" width="192" height="192"></canvas>
             <div class="absolute inset-0 flex flex-col items-center justify-center mt-4">
               <div class="text-4xl font-black" style="color:#00D4AA;">73</div>
@@ -251,7 +251,7 @@
 
       <!-- C: 치아 상태 맵 -->
       <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
-        <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">3.</span><span>🦷</span> 치아별 상태 맵</h2>
+        <h2 class="font-bold text-base md:text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">3.</span><span>🦷</span> 치아별 상태 맵</h2>
         <p class="text-xs text-gray-500 mb-4">치아를 클릭하면 상세 정보를 확인할 수 있습니다</p>
 
         <!-- Dental Chart SVG -->
@@ -288,7 +288,7 @@
 
       <!-- D: 골밀도 분석 -->
       <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">4.</span><span>🦴</span> 부위별 골밀도 분석</h2>
+        <h2 class="font-bold text-base md:text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">4.</span><span>🦴</span> 부위별 골밀도 분석</h2>
         <p class="text-xs text-gray-500 mb-5">3D CT 데이터 기반 · Hounsfield Units(HU) 측정값</p>
         <canvas id="boneChart" height="120"></canvas>
         <div class="mt-4 p-3 rounded-xl text-sm" style="background:#FEF3C7;border-left:3px solid #F4A261;">
@@ -309,9 +309,9 @@
 
       <!-- E: 위험 요소 레이더 -->
       <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">5.</span><span>⚠️</span> 위험 요소 분석</h2>
+        <h2 class="font-bold text-base md:text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">5.</span><span>⚠️</span> 위험 요소 분석</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
-          <div class="w-64 flex-shrink-0">
+          <div class="w-full md:w-64 flex-shrink-0">
             <canvas id="radarChart" width="256" height="256"></canvas>
           </div>
           <div class="flex-1 space-y-3">
@@ -357,7 +357,7 @@
 
       <!-- F: 5년 예측 -->
       <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">6.</span><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
+        <h2 class="font-bold text-base md:text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">6.</span><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
         <p class="text-xs text-gray-500 mb-5">AI 예측 기반 · 개인 구강 데이터 + 통계 모델 분석</p>
         <canvas id="predictChart" height="110"></canvas>
         <div class="mt-5 grid md:grid-cols-2 gap-4">
@@ -386,7 +386,7 @@
 
       <!-- G: 치료 우선순위 -->
       <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">7.</span><span>🎯</span> 치료 우선순위</h2>
+        <h2 class="font-bold text-base md:text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">7.</span><span>🎯</span> 치료 우선순위</h2>
         <canvas id="priorityChart" height="130"></canvas>
         <div class="mt-6 space-y-3">
           <div class="priority-card bg-red-50 p-4 rounded-xl border-red-500">
@@ -464,7 +464,7 @@
 
       <!-- H: 장비별 소견 -->
       <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">8.</span><span>🔬</span> 장비별 분석 소견</h2>
+        <h2 class="font-bold text-base md:text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">8.</span><span>🔬</span> 장비별 분석 소견</h2>
         <div class="space-y-6">
           <!-- CT -->
           <div>
@@ -1059,7 +1059,7 @@
   </script>
   <!-- ===== FOOTER ===== -->
   <footer class="bg-gray-900 text-gray-400 py-12">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+    <div class="max-w-6xl mx-auto px-6 grid sm:grid-cols-2 md:grid-cols-4 gap-8">
       <div class="md:col-span-2">
         <div class="flex items-center gap-3 mb-4">
           <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-10 w-auto rounded-lg" style="max-width:180px;background:white;padding:2px 6px;">
