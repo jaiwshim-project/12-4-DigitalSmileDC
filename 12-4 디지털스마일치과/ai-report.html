@@ -1032,6 +1032,29 @@
     }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
     document.querySelectorAll('.section-anim').forEach(el => animObserver.observe(el));
 
+    // Embed logo as base64 in print header so it always renders in PDF
+    (function embedPrintLogo() {
+      const printLogoImg = document.querySelector('.print-logo-header img');
+      if (!printLogoImg) return;
+      const src = printLogoImg.getAttribute('src');
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        // White background for the logo (matches the inline style padding)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        try {
+          printLogoImg.src = canvas.toDataURL('image/png');
+        } catch(e) { /* CORS fallback: keep original src */ }
+      };
+      img.src = src;
+    })();
+
     // Capture footer as image for pixel-perfect PDF print
     window.addEventListener('load', function() {
       const footer = document.querySelector('footer');
