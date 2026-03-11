@@ -219,59 +219,6 @@
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="bg-gray-900 text-gray-400 py-12">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
-      <div class="md:col-span-2">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
-          <div>
-            <div class="text-white font-bold">디지털스마일치과</div>
-            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
-          </div>
-        </div>
-        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
-        <div class="text-sm">
-          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
-          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
-        </div>
-      </div>
-      <div>
-        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
-        <ul class="space-y-2 text-sm">
-          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
-          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
-          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
-          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
-          <li><a href="articles.html" class="hover:text-white transition-colors" style="color:#00D4AA;">기사 보기</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="text-white font-semibold mb-4">진료 분야</div>
-        <ul class="space-y-2 text-sm">
-          <li>임플란트</li>
-          <li>라미네이트</li>
-          <li>치아교정</li>
-          <li>AI 정밀 진단</li>
-          <li>미세현미경 치료</li>
-        </ul>
-      </div>
-    </div>
-    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
-      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
-    </div>
-  </footer>
-
-  <!-- ===== 이전 배너 ===== -->
-  <div id="migrateBanner" style="display:none;max-width:500px;margin:0 auto 16px;padding:16px 20px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:12px;text-align:center;">
-    <p style="font-size:0.9rem;font-weight:600;color:#856404;margin:0 0 10px;">로컬 기사를 Supabase로 이전하면 모든 기기에서 동일하게 보입니다.</p>
-    <button onclick="runMigration()"
-      style="padding:10px 24px;background:#ffc107;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;">
-      지금 이전하기
-    </button>
-    <p id="migrateStatus" style="font-size:0.85rem;color:#856404;margin:8px 0 0;"></p>
-  </div>
-
   <!-- ===== 관리자 패널 ===== -->
   <div style="text-align:center; padding: 24px 0 8px;">
     <button onclick="showAdminLogin()" id="adminToggleBtn"
@@ -353,6 +300,49 @@
     </div>
     <div id="afToast" style="display:none;margin-top:12px;padding:10px;background:#e8f5e9;color:#2e7d32;border-radius:8px;font-size:0.85rem;text-align:center;"></div>
   </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+          <div>
+            <div class="text-white font-bold">디지털스마일치과</div>
+            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
+          </div>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
+        <div class="text-sm">
+          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
+          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
+          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
+          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
+          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
+          <li><a href="articles.html" class="hover:text-white transition-colors" style="color:#00D4AA;">기사 보기</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">진료 분야</div>
+        <ul class="space-y-2 text-sm">
+          <li>임플란트</li>
+          <li>라미네이트</li>
+          <li>치아교정</li>
+          <li>AI 정밀 진단</li>
+          <li>미세현미경 치료</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
+      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
+    </div>
+  </footer>
 
   <script>
     // ==================== SEED DATA ====================
