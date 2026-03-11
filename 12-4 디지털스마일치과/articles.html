@@ -262,6 +262,16 @@
     </div>
   </footer>
 
+  <!-- ===== 이전 배너 ===== -->
+  <div id="migrateBanner" style="display:none;max-width:500px;margin:0 auto 16px;padding:16px 20px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:12px;text-align:center;">
+    <p style="font-size:0.9rem;font-weight:600;color:#856404;margin:0 0 10px;">로컬 기사를 Supabase로 이전하면 모든 기기에서 동일하게 보입니다.</p>
+    <button onclick="runMigration()"
+      style="padding:10px 24px;background:#ffc107;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;">
+      지금 이전하기
+    </button>
+    <p id="migrateStatus" style="font-size:0.85rem;color:#856404;margin:8px 0 0;"></p>
+  </div>
+
   <!-- ===== 관리자 패널 ===== -->
   <div style="text-align:center; padding: 12px 0 0;">
     <button onclick="showAdminLogin()" id="adminToggleBtn"
@@ -495,12 +505,25 @@
       renderArticles();
     }
 
-    // localStorage → Supabase 자동 이전 (1회성)
+    // localStorage → Supabase 이전
     async function migrateFromLocalStorage() {
       if (localStorage.getItem('ds_migrated')) return;
       const local = JSON.parse(localStorage.getItem('ds_articles') || '[]');
-      if (local.length === 0) return;
-      const { data: existing } = await sb.from('articles').select('url');
+      if (local.length === 0) { localStorage.setItem('ds_migrated', '1'); return; }
+
+      const btn = document.getElementById('migrateBanner');
+      if (btn) btn.style.display = 'block';
+    }
+
+    async function runMigration() {
+      const banner = document.getElementById('migrateBanner');
+      const status = document.getElementById('migrateStatus');
+      const local = JSON.parse(localStorage.getItem('ds_articles') || '[]');
+      status.textContent = local.length + '개 발견, Supabase 확인 중...';
+
+      const { data: existing, error: fetchErr } = await sb.from('articles').select('url');
+      if (fetchErr) { status.textContent = '오류: ' + fetchErr.message; return; }
+
       const existingUrls = new Set((existing || []).map(r => r.url));
       const rows = local.filter(a => !existingUrls.has(a.url)).map(a => ({
         url:       a.url,
@@ -509,15 +532,25 @@
         summary:   a.summary   || '',
         category:  a.category  || 'AI 진단',
         read_time: a.readTime  || '3분',
-        tags:      a.tags      || [],
+        tags:      Array.isArray(a.tags) ? a.tags : [],
         date:      a.date      || ''
       }));
+
+      status.textContent = rows.length + '개 이전 중...';
+
       if (rows.length > 0) {
-        const { error } = await sb.from('articles').insert(rows);
-        if (!error) localStorage.setItem('ds_migrated', '1');
+        const { data, error } = await sb.from('articles').insert(rows).select();
+        if (error) {
+          status.textContent = '실패: ' + error.message;
+          return;
+        }
+        status.textContent = '✅ ' + data.length + '개 이전 완료! 새로고침합니다...';
       } else {
-        localStorage.setItem('ds_migrated', '1');
+        status.textContent = '✅ 이미 모두 Supabase에 있습니다.';
       }
+
+      localStorage.setItem('ds_migrated', '1');
+      setTimeout(() => { location.reload(); }, 1500);
     }
 
     // ==================== VIEW TOGGLE ====================
