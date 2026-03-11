@@ -129,7 +129,7 @@
         <div class="ai-insight p-6">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xl">🧠</span>
-            <h2 class="text-white font-bold text-lg">AI 종합 소견</h2>
+            <h2 class="text-white font-bold text-lg"><span class="opacity-60 font-normal mr-1">1.</span> AI 종합 소견</h2>
             <span class="status-badge badge-ai text-xs ml-auto">Claude Haiku 분석</span>
           </div>
           <p class="text-gray-200 leading-relaxed text-sm">
@@ -154,7 +154,7 @@
 
       <!-- B: 건강 점수 -->
       <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span>📊</span> 전체 구강 건강 점수</h2>
+        <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">2.</span><span>📊</span> 전체 구강 건강 점수</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-48 flex-shrink-0 relative">
             <canvas id="gaugeChart" width="192" height="192"></canvas>
@@ -195,7 +195,7 @@
 
       <!-- C: 치아 상태 맵 -->
       <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span>🦷</span> 치아별 상태 맵</h2>
+        <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">3.</span><span>🦷</span> 치아별 상태 맵</h2>
         <p class="text-xs text-gray-400 mb-4">치아를 클릭하면 상세 정보를 확인할 수 있습니다</p>
 
         <!-- Dental Chart SVG -->
@@ -226,7 +226,7 @@
 
       <!-- D: 골밀도 분석 -->
       <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span>🦴</span> 부위별 골밀도 분석</h2>
+        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">4.</span><span>🦴</span> 부위별 골밀도 분석</h2>
         <p class="text-xs text-gray-400 mb-5">3D CT 데이터 기반 · Hounsfield Units(HU) 측정값</p>
         <canvas id="boneChart" height="120"></canvas>
         <div class="mt-4 p-3 rounded-xl text-sm" style="background:#FEF3C7;border-left:3px solid #F4A261;">
@@ -240,7 +240,7 @@
 
       <!-- E: 위험 요소 레이더 -->
       <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>⚠️</span> 위험 요소 분석</h2>
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">5.</span><span>⚠️</span> 위험 요소 분석</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-64 flex-shrink-0">
             <canvas id="radarChart" width="256" height="256"></canvas>
@@ -282,7 +282,7 @@
 
       <!-- F: 5년 예측 -->
       <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
+        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">6.</span><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
         <p class="text-xs text-gray-400 mb-5">AI 예측 기반 · 개인 구강 데이터 + 통계 모델 분석</p>
         <canvas id="predictChart" height="110"></canvas>
         <div class="mt-5 grid md:grid-cols-2 gap-4">
@@ -305,7 +305,7 @@
 
       <!-- G: 치료 우선순위 -->
       <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>🎯</span> 치료 우선순위</h2>
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">7.</span><span>🎯</span> 치료 우선순위</h2>
         <canvas id="priorityChart" height="130"></canvas>
         <div class="mt-6 space-y-3">
           <div class="priority-card bg-red-50 p-4 rounded-xl border-red-500">
@@ -377,7 +377,7 @@
 
       <!-- H: 장비별 소견 -->
       <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>🔬</span> 장비별 분석 소견</h2>
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">8.</span><span>🔬</span> 장비별 분석 소견</h2>
         <div class="space-y-6">
           <!-- CT -->
           <div>
