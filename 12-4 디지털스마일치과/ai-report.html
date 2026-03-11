@@ -9,6 +9,7 @@
   <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: #F0F4F8; }
     .sidebar-link { display:block; padding:8px 12px; border-radius:8px; font-size:13px; color:#64748b; transition:all 0.2s; cursor:pointer; }
@@ -58,6 +59,9 @@
       .max-w-6xl { max-width:100% !important; padding:0 12px !important; }
       .space-y-6 > * + * { margin-top:16px !important; }
       canvas { max-width:100% !important; }
+      /* Hide real footer; show captured footer image */
+      footer { display:none !important; }
+      #printFooterCapture { display:block !important; width:100%; margin-top:24px; }
       /* Print-only logo: fixed → repeats top-right on every page */
       .print-logo-header {
         display: flex !important;
@@ -1027,7 +1031,43 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
     }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
     document.querySelectorAll('.section-anim').forEach(el => animObserver.observe(el));
+
+    // Capture footer as image for pixel-perfect PDF print
+    window.addEventListener('load', function() {
+      const footer = document.querySelector('footer');
+      const captureImg = document.getElementById('printFooterCapture');
+      if (!footer || !captureImg || typeof html2canvas === 'undefined') return;
+      html2canvas(footer, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#111827',
+        logging: false,
+        width: footer.scrollWidth,
+        windowWidth: document.documentElement.scrollWidth
+      }).then(function(canvas) {
+        captureImg.src = canvas.toDataURL('image/png');
+      });
+    });
+
+    // Re-capture on beforeprint in case layout changed
+    window.addEventListener('beforeprint', function() {
+      const footer = document.querySelector('footer');
+      const captureImg = document.getElementById('printFooterCapture');
+      if (!footer || !captureImg || typeof html2canvas === 'undefined') return;
+      if (!captureImg.src || captureImg.src === window.location.href) {
+        html2canvas(footer, {
+          scale: 2, useCORS: true, allowTaint: true,
+          backgroundColor: '#111827', logging: false
+        }).then(function(canvas) {
+          captureImg.src = canvas.toDataURL('image/png');
+        });
+      }
+    });
   </script>
+  <!-- Print-only: captured footer screenshot (hidden on screen) -->
+  <img id="printFooterCapture" style="display:none;" alt="footer" />
+
   <!-- ===== FOOTER ===== -->
   <footer class="bg-gray-900 text-gray-400 py-12">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
