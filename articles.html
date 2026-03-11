@@ -478,6 +478,16 @@
       }
     }
 
+    async function fixOldDates() {
+      if (localStorage.getItem('ds_dates_fixed')) return;
+      // 2023년 날짜 기사들을 2026-03-10으로 일괄 수정
+      const { error } = await sb
+        .from('articles')
+        .update({ date: '2026-03-10' })
+        .lt('date', '2024-01-01');
+      if (!error) localStorage.setItem('ds_dates_fixed', '1');
+    }
+
     async function init() {
       // Navbar mobile
       document.getElementById('menuBtn').onclick = () => {
@@ -491,6 +501,7 @@
       });
 
       await migrateFromLocalStorage();
+      await fixOldDates();
       await loadArticles();
       renderArticles();
     }
