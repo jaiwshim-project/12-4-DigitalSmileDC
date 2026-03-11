@@ -490,8 +490,34 @@
           window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.4)' : 'none';
       });
 
+      await migrateFromLocalStorage();
       await loadArticles();
       renderArticles();
+    }
+
+    // localStorage → Supabase 자동 이전 (1회성)
+    async function migrateFromLocalStorage() {
+      if (localStorage.getItem('ds_migrated')) return;
+      const local = JSON.parse(localStorage.getItem('ds_articles') || '[]');
+      if (local.length === 0) return;
+      const { data: existing } = await sb.from('articles').select('url');
+      const existingUrls = new Set((existing || []).map(r => r.url));
+      const rows = local.filter(a => !existingUrls.has(a.url)).map(a => ({
+        url:       a.url,
+        title:     a.title,
+        thumbnail: a.thumbnail || '',
+        summary:   a.summary   || '',
+        category:  a.category  || 'AI 진단',
+        read_time: a.readTime  || '3분',
+        tags:      a.tags      || [],
+        date:      a.date      || ''
+      }));
+      if (rows.length > 0) {
+        const { error } = await sb.from('articles').insert(rows);
+        if (!error) localStorage.setItem('ds_migrated', '1');
+      } else {
+        localStorage.setItem('ds_migrated', '1');
+      }
     }
 
     // ==================== VIEW TOGGLE ====================
