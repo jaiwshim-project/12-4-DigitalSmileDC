@@ -219,63 +219,10 @@
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="bg-gray-900 text-gray-400 py-12">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
-      <div class="md:col-span-2">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
-          <div>
-            <div class="text-white font-bold">디지털스마일치과</div>
-            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
-          </div>
-        </div>
-        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
-        <div class="text-sm">
-          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
-          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
-        </div>
-      </div>
-      <div>
-        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
-        <ul class="space-y-2 text-sm">
-          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
-          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
-          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
-          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
-          <li><a href="articles.html" class="hover:text-white transition-colors" style="color:#00D4AA;">기사 보기</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="text-white font-semibold mb-4">진료 분야</div>
-        <ul class="space-y-2 text-sm">
-          <li>임플란트</li>
-          <li>라미네이트</li>
-          <li>치아교정</li>
-          <li>AI 정밀 진단</li>
-          <li>미세현미경 치료</li>
-        </ul>
-      </div>
-    </div>
-    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
-      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
-    </div>
-  </footer>
-
-  <!-- ===== 이전 배너 ===== -->
-  <div id="migrateBanner" style="display:none;max-width:500px;margin:0 auto 16px;padding:16px 20px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:12px;text-align:center;">
-    <p style="font-size:0.9rem;font-weight:600;color:#856404;margin:0 0 10px;">로컬 기사를 Supabase로 이전하면 모든 기기에서 동일하게 보입니다.</p>
-    <button onclick="runMigration()"
-      style="padding:10px 24px;background:#ffc107;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;">
-      지금 이전하기
-    </button>
-    <p id="migrateStatus" style="font-size:0.85rem;color:#856404;margin:8px 0 0;"></p>
-  </div>
-
   <!-- ===== 관리자 패널 ===== -->
-  <div style="text-align:center; padding: 12px 0 0;">
+  <div style="text-align:center; padding: 24px 0 8px;">
     <button onclick="showAdminLogin()" id="adminToggleBtn"
-      style="background:none;border:none;color:#9ca3af;font-size:0.78rem;cursor:pointer;font-family:inherit;">
+      style="background:#f3f4f6;border:1px solid #d1d5db;color:#6b7280;font-size:0.85rem;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:inherit;">
       ⚙ 관리자
     </button>
   </div>
@@ -353,6 +300,49 @@
     </div>
     <div id="afToast" style="display:none;margin-top:12px;padding:10px;background:#e8f5e9;color:#2e7d32;border-radius:8px;font-size:0.85rem;text-align:center;"></div>
   </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+          <div>
+            <div class="text-white font-bold">디지털스마일치과</div>
+            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
+          </div>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
+        <div class="text-sm">
+          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
+          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
+          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
+          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
+          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
+          <li><a href="articles.html" class="hover:text-white transition-colors" style="color:#00D4AA;">기사 보기</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">진료 분야</div>
+        <ul class="space-y-2 text-sm">
+          <li>임플란트</li>
+          <li>라미네이트</li>
+          <li>치아교정</li>
+          <li>AI 정밀 진단</li>
+          <li>미세현미경 치료</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
+      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
+    </div>
+  </footer>
 
   <script>
     // ==================== SEED DATA ====================
@@ -450,7 +440,14 @@
     let currentView = 'board';
 
     // ==================== INIT ====================
+    async function cleanDefaultSummary() {
+      await sb.from('articles')
+        .update({ summary: '' })
+        .eq('summary', '기사 내용을 확인하려면 링크를 클릭하세요.');
+    }
+
     async function loadArticles() {
+      await cleanDefaultSummary();
       const { data, error } = await sb
         .from('articles')
         .select('*')
@@ -488,6 +485,16 @@
       }
     }
 
+    async function fixOldDates() {
+      if (localStorage.getItem('ds_dates_fixed')) return;
+      // 2023년 날짜 기사들을 2026-03-10으로 일괄 수정
+      const { error } = await sb
+        .from('articles')
+        .update({ date: '2026-03-10' })
+        .lt('date', '2024-01-01');
+      if (!error) localStorage.setItem('ds_dates_fixed', '1');
+    }
+
     async function init() {
       // Navbar mobile
       document.getElementById('menuBtn').onclick = () => {
@@ -501,6 +508,7 @@
       });
 
       await migrateFromLocalStorage();
+      await fixOldDates();
       await loadArticles();
       renderArticles();
     }
@@ -621,7 +629,7 @@
       const tagsRaw  = document.getElementById('af-tags').value.trim();
       const date     = document.getElementById('af-date').value.trim() || '';
       const thumbnail= document.getElementById('af-thumb').value.trim() || '';
-      const summary  = document.getElementById('af-summary').value.trim() || '기사 내용을 확인하려면 링크를 클릭하세요.';
+      const summary  = document.getElementById('af-summary').value.trim() || '';
 
       if (!title) { alert('기사 제목을 입력하세요.'); return; }
       if (!url)   { alert('링크 주소를 입력하세요.'); return; }
@@ -653,6 +661,20 @@
       toast.textContent = '✅ 기사가 추가되었습니다!';
       toast.style.display = 'block';
       setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    // ==================== THUMBNAIL DEFAULTS ====================
+    function getDefaultThumb(category, articleId) {
+      const kwMap = {
+        'AI 진단':  'dental,technology',
+        '임플란트': 'dental,surgery',
+        '치아교정': 'teeth,smile',
+        '구강건강': 'oral,health',
+        '의료기술': 'medical,clinic',
+      };
+      const kw = kwMap[category] || 'dental,health';
+      const lock = articleId || 1;
+      return `https://loremflickr.com/400/225/${kw}?lock=${lock}`;
     }
 
     // ==================== RENDER ====================
@@ -700,18 +722,13 @@
           </td>
           <td class="px-5 py-4 text-xs text-gray-400 hidden md:table-cell">${esc(a.date)}</td>
           <td class="px-5 py-4">
-            <div class="flex items-center gap-1.5">
-              <a href="${esc(a.url)}" target="_blank"
-                class="text-xs font-semibold px-3 py-1.5 rounded-lg text-white transition-all hover:shadow-md"
-                style="background:linear-gradient(135deg,#2f98d4,#0A2463);">보기</a>
-              <button onclick="deleteArticle(${a.id})"
-                class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all text-red-400" title="삭제">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-              </button>
-            </div>
+            <button onclick="deleteArticle(${a.id})"
+              class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all text-red-400" title="삭제">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
           </td>
         </tr>
       `).join('');
@@ -732,19 +749,11 @@
       grid.innerHTML = articles.map(a => `
         <div class="article-card">
           <a href="${esc(a.url)}" target="_blank" class="block">
-            ${a.thumbnail
-              ? `<div class="h-44 overflow-hidden bg-gray-100">
-                   <img src="${esc(a.thumbnail)}" alt="${esc(a.title)}"
-                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                     onerror="this.parentElement.outerHTML='<div class=\\'h-44 thumb-placeholder flex items-center justify-center\\'>🦷</div>'"/>
-                 </div>`
-              : `<div class="h-44 thumb-placeholder flex items-center justify-center">
-                   <svg class="w-14 h-14 text-white opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                       d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                   </svg>
-                 </div>`
-            }
+            <div class="h-44 overflow-hidden bg-gray-100">
+              <img src="${esc(a.thumbnail || getDefaultThumb(a.category, a.id))}" alt="${esc(a.title)}"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                onerror="this.parentElement.style.background='linear-gradient(135deg,#0A2463,#2f98d4)';this.style.display='none'"/>
+            </div>
           </a>
           <div class="p-5">
             <div class="flex items-center justify-between mb-2.5">
