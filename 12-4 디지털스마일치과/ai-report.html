@@ -369,38 +369,47 @@
         </div>
       </section>
 
-      <!-- H: 장비별 소견 탭 -->
+      <!-- H: 장비별 소견 -->
       <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
         <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>🔬</span> 장비별 분석 소견</h2>
-        <div class="flex gap-2 flex-wrap mb-5" id="equipTabs">
-          <button class="tab-btn active" onclick="showTab('ct', this)">📡 3D/5D CT</button>
-          <button class="tab-btn" onclick="showTab('oral', this)">🦷 구강스캐너</button>
-          <button class="tab-btn" onclick="showTab('face', this)">😊 페이스스캐너</button>
-        </div>
-        <div id="tabCt" class="tab-content">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#7 부위:</strong> 치조골 소실 62% · 임플란트 식립 가능 (골폭 7.2mm 확인)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">하악 대구치 부위:</strong> 골밀도 710 HU · 정상(800HU) 이하 · 하악 전체 스케일링 권장</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">#19 부위:</strong> 하악관(신경) 거리 6.3mm · 신경치료 시 주의 요망</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">TMJ(턱관절):</strong> 정상 범위 · 좌우 대칭성 양호 (±1.2mm)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">상악동:</strong> 좌우 정상 · 임플란트 상악동 거상 불필요</div></li>
-          </ul>
-        </div>
-        <div id="tabOral" class="tab-content hidden">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#6 치아:</strong> 치아 구조 30% 잔존 · 보존 불가 · 크라운 즉시 권장</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">전치부 심미:</strong> 스캔 결과 전치부 4개 치아 색조 불일치 (A3.5 vs A2)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">교합면 마모:</strong> 전반적 마모도 정상 범위 · 이갈이 소견 없음</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">구강 내 스캔 정밀도:</strong> 32개 치아 중 28개 정상 스캔 완료</div></li>
-          </ul>
-        </div>
-        <div id="tabFace" class="tab-content hidden">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">안면 중선:</strong> 상악 중선과 안면 중선 2.3mm 편위 (왼쪽) · 교정 고려 가능</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">미소 라인:</strong> 좌측 하강, 우측 상승 · 비대칭 점수 28/100 (주의 수준)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">치아 노출량:</strong> 미소 시 상악 전치부 노출 8mm · 이상적 범위 내</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">페이셜 프로파일:</strong> Class I 골격 패턴 · 정상 범위</div></li>
-          </ul>
+        <div class="space-y-6">
+          <!-- CT -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#2f98d4;">📡 3D/5D CT</span>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#7 부위:</strong> 치조골 소실 62% · 임플란트 식립 가능 (골폭 7.2mm 확인)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">하악 대구치 부위:</strong> 골밀도 710 HU · 정상(800HU) 이하 · 하악 전체 스케일링 권장</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">#19 부위:</strong> 하악관(신경) 거리 6.3mm · 신경치료 시 주의 요망</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">TMJ(턱관절):</strong> 정상 범위 · 좌우 대칭성 양호 (±1.2mm)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">상악동:</strong> 좌우 정상 · 임플란트 상악동 거상 불필요</div></li>
+            </ul>
+          </div>
+          <!-- 구강스캐너 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#2EC4B6;">🦷 구강스캐너</span>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#6 치아:</strong> 치아 구조 30% 잔존 · 보존 불가 · 크라운 즉시 권장</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">전치부 심미:</strong> 스캔 결과 전치부 4개 치아 색조 불일치 (A3.5 vs A2)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">교합면 마모:</strong> 전반적 마모도 정상 범위 · 이갈이 소견 없음</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">구강 내 스캔 정밀도:</strong> 32개 치아 중 28개 정상 스캔 완료</div></li>
+            </ul>
+          </div>
+          <!-- 페이스스캐너 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#F4A261;">😊 페이스스캐너</span>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">안면 중선:</strong> 상악 중선과 안면 중선 2.3mm 편위 (왼쪽) · 교정 고려 가능</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">미소 라인:</strong> 좌측 하강, 우측 상승 · 비대칭 점수 28/100 (주의 수준)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">치아 노출량:</strong> 미소 시 상악 전치부 노출 8mm · 이상적 범위 내</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">페이셜 프로파일:</strong> Class I 골격 패턴 · 정상 범위</div></li>
+            </ul>
+          </div>
         </div>
         <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
           <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
