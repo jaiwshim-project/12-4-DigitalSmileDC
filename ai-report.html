@@ -29,42 +29,90 @@
     .priority-card:hover { transform:translateX(4px); }
     .tab-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; color:#64748b; }
     .tab-btn.active { background:#0A2463; color:white; }
+    .mobile-menu-item { display:block; padding:10px 0; color:rgba(255,255,255,0.8); border-bottom:1px solid rgba(255,255,255,0.1); }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(4px); }
     .pulse { animation:pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
     .section-anim { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease; }
     .section-anim.show { opacity:1; transform:none; }
+    @page {
+      margin: 20mm 14mm 20mm 14mm;
+    }
+    @page {
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-size: 9pt;
+        color: #6B7280;
+        font-family: 'Noto Sans KR', sans-serif;
+      }
+    }
     @media print {
       .no-print { display:none !important; }
-      body { background:white; }
-      .report-section { page-break-inside:avoid; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+      body { background:#F0F4F8 !important; margin:0; }
+      .section-anim { opacity:1 !important; transform:none !important; }
+      .report-section { break-inside:avoid; page-break-inside:avoid; }
+      .pt-16 { padding-top:0 !important; }
+      aside { display:none !important; }
+      main { width:100% !important; max-width:100% !important; }
+      .max-w-6xl { max-width:100% !important; padding:0 12px !important; }
+      .space-y-6 > * + * { margin-top:16px !important; }
+      canvas { max-width:100% !important; }
+      /* Page break: patient header on page 1, section 1 starts page 2 */
+      #secAI { break-before: page; page-break-before: always; }
+      /* Footer prints as-is (print-color-adjust:exact preserves dark background) */
+      footer { margin-top: 32px; }
+      /* Print-only logo: fixed → repeats top-right on every page */
+      .print-logo-header {
+        display: flex !important;
+        position: fixed;
+        top: 6mm;
+        right: 10mm;
+        align-items: center;
+        gap: 6px;
+        z-index: 9999;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Print-only: logo top-right + page number bottom-right (hidden on screen) -->
+  <div class="print-logo-header no-screen" style="display:none;">
+    <img src="로고-디지털스마일치과.png" alt="디지털스마일치과"
+         style="height:28px;width:auto;background:white;padding:2px 5px;border-radius:5px;">
+    <span style="font-size:9pt;font-weight:700;color:#F59E0B;">AI 구강진단 플랫폼</span>
+  </div>
+
   <!-- NAVBAR (no-print) -->
-  <nav class="no-print fixed top-0 left-0 right-0 z-50 h-14" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-full">
-      <a href="index.html" class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-xs" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
-        <div>
-          <div class="text-white font-bold text-xs leading-tight">디지털스마일치과</div>
-          <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
-        </div>
+  <nav class="no-print fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-9 w-auto rounded-lg" style="max-width:164px;background:white;padding:2px 6px;">
+        <span class="text-xs font-semibold whitespace-nowrap" style="color:#00D4AA;">AI구강진단 플랫폼</span>
       </a>
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="text-gray-400 hover:text-white text-xs transition-colors">← 홈으로</a>
-        <a href="equipment.html" class="text-gray-400 hover:text-white text-xs transition-colors">연동 장비</a>
-        <a href="workflow.html" class="text-gray-400 hover:text-white text-xs transition-colors">워크플로우</a>
-        <a href="articles.html" class="text-gray-400 hover:text-white text-xs transition-colors">기사 보기</a>
-        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-medium text-white" style="background:rgba(0,212,170,0.2);border:1px solid #00D4AA;color:#00D4AA;">🖨 인쇄</button>
-      </div>
+      <ul class="hidden md:flex gap-6 items-center">
+        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm transition-colors">홈</a></li>
+        <li><a href="ai-report.html" class="text-white text-sm font-medium border-b-2 pb-0.5" style="border-color:#00D4AA;">AI 진단 리포트</a></li>
+        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm transition-colors">연동 장비</a></li>
+        <li><a href="workflow.html" class="text-gray-300 hover:text-white text-sm transition-colors">AI 워크플로우</a></li>
+        <li><a href="articles.html" class="text-gray-300 hover:text-white text-sm transition-colors">기사 보기</a></li>
+        <li><a href="https://www.digitalsmiledc.com/naver" target="_blank" class="text-sm px-4 py-1.5 rounded-full border font-medium transition-all hover:bg-white" style="border-color:#00D4AA;color:#00D4AA;">📅 네이버 예약</a></li>
+      </ul>
+      <button id="menuBtn" class="md:hidden text-white text-2xl leading-none">☰</button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 border-t border-white/10">
+      <a href="index.html" class="mobile-menu-item">🏠 홈</a>
+      <a href="ai-report.html" class="mobile-menu-item" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
+      <a href="equipment.html" class="mobile-menu-item">🔬 연동 장비</a>
+      <a href="workflow.html" class="mobile-menu-item">⚙️ AI 워크플로우</a>
+      <a href="articles.html" class="mobile-menu-item">📰 기사 보기</a>
+      <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="mobile-menu-item">📅 네이버 예약</a>
     </div>
   </nav>
 
   <!-- PATIENT HEADER -->
-  <div class="pt-14">
+  <div class="pt-16">
     <div style="background:linear-gradient(135deg,#0A2463,#1e5aa8);" class="px-6 py-8">
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -104,20 +152,17 @@
     <!-- SIDEBAR (no-print) -->
     <aside class="no-print hidden lg:block w-48 flex-shrink-0">
       <div class="sticky top-20 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-        <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">리포트 목차</div>
+        <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3">리포트 목차</div>
         <nav id="tocNav" class="space-y-1">
-          <a onclick="scrollTo('secAI')" class="sidebar-link active">🧠 AI 종합 소견</a>
-          <a onclick="scrollTo('secScore')" class="sidebar-link">📊 건강 점수</a>
-          <a onclick="scrollTo('secMap')" class="sidebar-link">🦷 치아 상태 맵</a>
-          <a onclick="scrollTo('secBone')" class="sidebar-link">🦴 골밀도 분석</a>
-          <a onclick="scrollTo('secRisk')" class="sidebar-link">⚠️ 위험 요소</a>
-          <a onclick="scrollTo('secPredict')" class="sidebar-link">📈 5년 예측</a>
-          <a onclick="scrollTo('secPriority')" class="sidebar-link">🎯 치료 우선순위</a>
-          <a onclick="scrollTo('secEquip')" class="sidebar-link">🔬 장비별 소견</a>
+          <a onclick="goTo('secAI')" class="sidebar-link active">🧠 AI 종합 소견</a>
+          <a onclick="goTo('secScore')" class="sidebar-link">📊 건강 점수</a>
+          <a onclick="goTo('secMap')" class="sidebar-link">🦷 치아 상태 맵</a>
+          <a onclick="goTo('secBone')" class="sidebar-link">🦴 골밀도 분석</a>
+          <a onclick="goTo('secRisk')" class="sidebar-link">⚠️ 위험 요소</a>
+          <a onclick="goTo('secPredict')" class="sidebar-link">📈 5년 예측</a>
+          <a onclick="goTo('secPriority')" class="sidebar-link">🎯 치료 우선순위</a>
+          <a onclick="goTo('secEquip')" class="sidebar-link">🔬 장비별 소견</a>
         </nav>
-        <div class="mt-4 pt-4 border-t border-gray-100">
-          <button onclick="window.print()" class="w-full py-2 rounded-lg text-xs font-medium text-white" style="background:#0A2463;">🖨 PDF 출력</button>
-        </div>
       </div>
     </aside>
 
@@ -125,12 +170,11 @@
     <main class="flex-1 space-y-6 min-w-0">
 
       <!-- A: AI 종합 소견 -->
-      <section id="secAI" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden section-anim">
+      <section id="secAI" class="report-section bg-white rounded-2xl shadow-sm overflow-hidden section-anim" style="border:2px solid #00D4AA;">
         <div class="ai-insight p-6">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xl">🧠</span>
-            <h2 class="text-white font-bold text-lg">AI 종합 소견</h2>
-            <span class="status-badge badge-ai text-xs ml-auto">Claude Haiku 분석</span>
+            <h2 class="text-white font-bold text-lg"><span class="font-normal mr-1" style="color:#9CA3AF;">1.</span> AI 종합 소견</h2>
           </div>
           <p class="text-gray-200 leading-relaxed text-sm">
             3D CT, 구강스캐너, 페이스스캐너 통합 데이터 분석 결과, 전반적인 구강 건강 상태는 <strong class="text-teal-300">양호(73점)</strong> 수준입니다.
@@ -141,22 +185,32 @@
           </p>
         </div>
         <div class="p-4 bg-gray-50 flex flex-wrap gap-3">
-          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span>즉시 치료 필요: 3개소</div>
-          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>주의 관찰: 6개소</div>
-          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-teal-400 inline-block"></span>정상: 19개소</div>
-          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-gray-300 inline-block"></span>결손: 4개소</div>
+          <div class="flex items-center gap-2 text-xs text-gray-700"><span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span>즉시 치료 필요: 3개소</div>
+          <div class="flex items-center gap-2 text-xs text-gray-700"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>주의 관찰: 6개소</div>
+          <div class="flex items-center gap-2 text-xs text-gray-700"><span class="w-3 h-3 rounded-full bg-teal-400 inline-block"></span>정상: 19개소</div>
+          <div class="flex items-center gap-2 text-xs text-gray-700"><span class="w-3 h-3 rounded-full bg-gray-300 inline-block"></span>결손: 4개소</div>
+        </div>
+        <div class="mx-6 mb-6 mt-4 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>3D CT·구강스캐너·페이스스캐너 세 장비 데이터를 AI가 통합 분석한 핵심 결과를 요약합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>색상 기준: <strong class="text-red-500">빨강</strong> 즉시 치료 / <strong class="text-yellow-500">노랑</strong> 주의 관찰 / <strong class="text-teal-500">초록</strong> 정상 / <strong class="text-gray-400">회색</strong> 결손</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>현재 긴급 치료 <strong>3개소</strong> · 주의 관찰 <strong>6개소</strong> · 정상 <strong>19개소</strong> 확인됐습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>단순 X-ray를 넘어 3차원 골밀도·디지털 구강 스캔·안면 분석 결과를 동시에 반영했습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>AI 분석 신뢰도 <strong>94.7%</strong> — 최종 치료 계획은 담당 원장과 심층 상담 후 결정하시기 바랍니다.</span></li>
+          </ul>
         </div>
       </section>
 
       <!-- B: 건강 점수 -->
-      <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span>📊</span> 전체 구강 건강 점수</h2>
+      <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
+        <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">2.</span><span>📊</span> 전체 구강 건강 점수</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-48 flex-shrink-0 relative">
             <canvas id="gaugeChart" width="192" height="192"></canvas>
             <div class="absolute inset-0 flex flex-col items-center justify-center mt-4">
               <div class="text-4xl font-black" style="color:#00D4AA;">73</div>
-              <div class="text-sm text-gray-400">/ 100점</div>
+              <div class="text-sm text-gray-600">/ 100점</div>
               <div class="mt-1 text-xs font-bold px-2 py-0.5 rounded-full" style="background:#D1FAE5;color:#065F46;">양호</div>
             </div>
           </div>
@@ -183,12 +237,22 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>전반적 구강 건강을 100점 만점으로 수치화 — 현재 종합 점수 <strong>73점(양호)</strong>.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>항목별 점수: 교합(82) · 잇몸(71) · 치아(68) · 골 건강(65) · 심미(55)</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>교합이 가장 양호하며, <strong class="text-red-500">심미(55점)</strong>와 <strong class="text-yellow-600">골 건강(65점)</strong>이 우선 관리 대상입니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>3D CT·구강스캐너·페이스스캐너 정밀 데이터 기반 — 단순 육안 검사보다 정확합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>정기 검진 시 점수 변화 추이를 통해 치료 효과를 객관적으로 추적할 수 있습니다.</span></li>
+          </ul>
+        </div>
       </section>
 
       <!-- C: 치아 상태 맵 -->
-      <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span>🦷</span> 치아별 상태 맵</h2>
-        <p class="text-xs text-gray-400 mb-4">치아를 클릭하면 상세 정보를 확인할 수 있습니다</p>
+      <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
+        <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">3.</span><span>🦷</span> 치아별 상태 맵</h2>
+        <p class="text-xs text-gray-500 mb-4">치아를 클릭하면 상세 정보를 확인할 수 있습니다</p>
 
         <!-- Dental Chart SVG -->
         <div class="overflow-x-auto">
@@ -205,26 +269,47 @@
 
         <!-- Legend -->
         <div class="flex flex-wrap gap-4 mt-4 justify-center">
-          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#2EC4B6;"></span>정상</div>
-          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#F4A261;"></span>주의</div>
-          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#E63946;"></span>즉시 치료</div>
-          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#9CA3AF;"></span>결손</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-700"><span class="w-4 h-4 rounded inline-block" style="background:#2EC4B6;"></span>정상</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-700"><span class="w-4 h-4 rounded inline-block" style="background:#F4A261;"></span>주의</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-700"><span class="w-4 h-4 rounded inline-block" style="background:#E63946;"></span>즉시 치료</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-700"><span class="w-4 h-4 rounded inline-block" style="background:#9CA3AF;"></span>결손</div>
+        </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>상악 16개·하악 16개 총 32개 치아 상태를 색상으로 시각화한 디지털 치식도입니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>색상 기준: <strong class="text-teal-500">초록</strong> 정상 / <strong class="text-yellow-500">주황</strong> 주의 / <strong class="text-red-500">빨강</strong> 즉시 치료 / <strong class="text-gray-400">회색</strong> 결손</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>각 치아 블록 클릭 시 AI 분석 상세 정보·추천 치료·신뢰도를 팝업으로 확인할 수 있습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>현재 <strong class="text-red-600">즉시 치료</strong>: 상악 좌측 #6(제1소구치)·#7(제1대구치) / <strong class="text-yellow-600">주의</strong>: 하악 좌측 제3소구치</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>구강스캐너 STL + 3D CT DICOM 결합 데이터 — 파노라마 X-ray보다 훨씬 정밀합니다.</span></li>
+          </ul>
         </div>
       </section>
 
       <!-- D: 골밀도 분석 -->
-      <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span>🦴</span> 부위별 골밀도 분석</h2>
-        <p class="text-xs text-gray-400 mb-5">3D CT 데이터 기반 · Hounsfield Units(HU) 측정값</p>
+      <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
+        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">4.</span><span>🦴</span> 부위별 골밀도 분석</h2>
+        <p class="text-xs text-gray-500 mb-5">3D CT 데이터 기반 · Hounsfield Units(HU) 측정값</p>
         <canvas id="boneChart" height="120"></canvas>
         <div class="mt-4 p-3 rounded-xl text-sm" style="background:#FEF3C7;border-left:3px solid #F4A261;">
           <strong class="text-yellow-800">⚠️ 주의:</strong> <span class="text-yellow-700">하악 대구치 부위 골밀도(710 HU)가 정상 기준(800 HU) 이하입니다. 임플란트 계획 시 골이식 가능성을 고려해야 합니다.</span>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>턱뼈 6개 부위의 골밀도를 Hounsfield Units(HU) 단위로 측정한 결과입니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>HU 수치가 높을수록 뼈가 단단함 — 임플란트 식립 최소 기준은 <strong>800 HU</strong>입니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-red-600">기준 미달</strong>: 하악 대구치 710 HU — 골이식(Bone Graft) 필요 가능성 있습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-yellow-600">기준 근접</strong>: 상악 대구치 780 HU — 주의 관찰이 필요합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-teal-600">양호</strong>: 하악 소구치 950 HU · 상악 소구치 920 HU — 임플란트 식립 조건 충족.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>이 데이터는 향후 임플란트 계획·골이식 범위 결정에 핵심 자료로 활용됩니다.</span></li>
+          </ul>
+        </div>
       </section>
 
       <!-- E: 위험 요소 레이더 -->
-      <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>⚠️</span> 위험 요소 분석</h2>
+      <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">5.</span><span>⚠️</span> 위험 요소 분석</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-64 flex-shrink-0">
             <canvas id="radarChart" width="256" height="256"></canvas>
@@ -252,12 +337,28 @@
             </div>
           </div>
         </div>
+        <div class="mt-4 flex flex-wrap gap-4 p-3 rounded-xl" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-700 w-full">🎨 색상 범례</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-800"><span class="w-3 h-3 rounded-full inline-block bg-red-400"></span><strong class="text-red-600">빨강</strong> — 즉시 치료 필요</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-800"><span class="w-3 h-3 rounded-full inline-block bg-yellow-400"></span><strong class="text-yellow-600">노랑</strong> — 주의 관찰 필요</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-800"><span class="w-3 h-3 rounded-full inline-block bg-green-400"></span><strong class="text-green-600">녹색</strong> — 정상</div>
+        </div>
+        <div class="mt-3 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>6가지 위험 요소(치주질환·충치위험·골소실·교합이상·심미문제·보철필요)를 0~100점으로 평가합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>차트 읽는 법: <strong class="text-red-500">빨강 영역</strong> = 환자 현재 상태 / <strong class="text-green-600">초록 점선</strong> = 정상 기준선(20점)</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-red-600">고위험</strong>: 심미문제(80점) · 골소실(70점) — 즉각적인 개선이 필요합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-teal-600">상대적 양호</strong>: 충치위험(40점) — 현재 활동성 충치 위험은 낮습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>치료 완료 후 재측정으로 위험 수준 감소를 수치로 객관적으로 추적할 수 있습니다.</span></li>
+          </ul>
+        </div>
       </section>
 
       <!-- F: 5년 예측 -->
-      <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
-        <p class="text-xs text-gray-400 mb-5">AI 예측 기반 · 개인 구강 데이터 + 통계 모델 분석</p>
+      <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
+        <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">6.</span><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
+        <p class="text-xs text-gray-500 mb-5">AI 예측 기반 · 개인 구강 데이터 + 통계 모델 분석</p>
         <canvas id="predictChart" height="110"></canvas>
         <div class="mt-5 grid md:grid-cols-2 gap-4">
           <div class="p-4 rounded-xl" style="background:#FEE2E2;border:1px solid #FECACA;">
@@ -271,11 +372,21 @@
             <div class="text-xs text-green-600 leading-relaxed">6개월 내 핵심 치료 완료 시, 5년 후 최상급 구강 건강 유지. 추가 치료 최소화 가능</div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>현재 점수(73점)에서 출발해 향후 5년간 두 가지 시나리오를 비교합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-red-600">치료 미진행 시(빨강 선)</strong>: 치주질환·골소실 악화 → 5년 후 <strong>28점</strong>까지 하락 예측.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-green-600">권장 치료 완료 시(초록 선)</strong>: 6개월 내 핵심 치료 완료 → 5년 후 <strong>94점</strong> 도달 가능.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>예측 모델: 환자 골밀도·치주·교합 데이터 + 수만 건의 치과 임상 통계를 결합한 AI 알고리즘.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>치료 여부에 따른 점수 차이 <strong>66점</strong> — 조기 치료의 중요성을 수치로 확인하세요.</span></li>
+          </ul>
+        </div>
       </section>
 
       <!-- G: 치료 우선순위 -->
-      <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>🎯</span> 치료 우선순위</h2>
+      <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">7.</span><span>🎯</span> 치료 우선순위</h2>
         <canvas id="priorityChart" height="130"></canvas>
         <div class="mt-6 space-y-3">
           <div class="priority-card bg-red-50 p-4 rounded-xl border-red-500">
@@ -285,7 +396,7 @@
                   <span class="status-badge badge-danger">긴급</span>
                   <span class="font-bold text-sm" style="color:#0A2463;">#7 상악 좌측 제1대구치 임플란트</span>
                 </div>
-                <div class="text-xs text-gray-500">CT 분석: 골밀도 충분 · 임플란트 가이드 제작 가능</div>
+                <div class="text-xs text-gray-600">CT 분석: 골밀도 충분 · 임플란트 가이드 제작 가능</div>
               </div>
               <div class="text-right ml-4">
                 <div class="text-xs text-gray-400">예상 기간</div>
@@ -300,7 +411,7 @@
                   <span class="status-badge badge-danger">긴급</span>
                   <span class="font-bold text-sm" style="color:#0A2463;">#6 상악 좌측 제1소구치 크라운</span>
                 </div>
-                <div class="text-xs text-gray-500">구강스캐너: 치아 구조 70% 손실 · 크라운 즉시 필요</div>
+                <div class="text-xs text-gray-600">구강스캐너: 치아 구조 70% 손실 · 크라운 즉시 필요</div>
               </div>
               <div class="text-right ml-4">
                 <div class="text-xs text-gray-400">예상 기간</div>
@@ -315,7 +426,7 @@
                   <span class="status-badge badge-warn">권장</span>
                   <span class="font-bold text-sm" style="color:#0A2463;">치주 스케일링 (전악)</span>
                 </div>
-                <div class="text-xs text-gray-500">3D CT: 하악 전치부 치석 침착, 치주포켓 4mm 이상</div>
+                <div class="text-xs text-gray-600">3D CT: 하악 전치부 치석 침착, 치주포켓 4mm 이상</div>
               </div>
               <div class="text-right ml-4">
                 <div class="text-xs text-gray-400">예상 기간</div>
@@ -330,7 +441,7 @@
                   <span class="status-badge badge-warn">권장</span>
                   <span class="font-bold text-sm" style="color:#0A2463;">#19 하악 좌측 제1대구치 신경치료</span>
                 </div>
-                <div class="text-xs text-gray-500">미세현미경 + CT 분석: 근관 내 감염 소견, 조기 치료 권장</div>
+                <div class="text-xs text-gray-600">미세현미경 + CT 분석: 근관 내 감염 소견, 조기 치료 권장</div>
               </div>
               <div class="text-right ml-4">
                 <div class="text-xs text-gray-400">예상 기간</div>
@@ -339,51 +450,182 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>치료 항목을 긴급도(0~100점) 순으로 정렬 — 수치가 높을수록 즉각 처치가 필요합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>색상 기준: <strong class="text-red-500">빨강</strong> 즉시 / <strong class="text-orange-500">주황</strong> 단기 권장 / <strong class="text-blue-500">파랑·초록</strong> 중·장기 계획</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong class="text-red-600">최고 긴급</strong>: #7 임플란트(95점) · #6 크라운(88점) — 지연 시 인접 치아·골조직 연쇄 손상 위험.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>하단 상세 카드에서 각 항목의 AI 근거·예상 소요 기간·데이터 출처를 확인할 수 있습니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>순서대로 완료 시 약 <strong>6개월 이내</strong> 핵심 치료를 마칠 수 있을 것으로 예측됩니다.</span></li>
+          </ul>
+        </div>
       </section>
 
-      <!-- H: 장비별 소견 탭 -->
-      <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span>🔬</span> 장비별 분석 소견</h2>
-        <div class="flex gap-2 flex-wrap mb-5" id="equipTabs">
-          <button class="tab-btn active" onclick="showTab('ct', this)">📡 3D/5D CT</button>
-          <button class="tab-btn" onclick="showTab('oral', this)">🦷 구강스캐너</button>
-          <button class="tab-btn" onclick="showTab('face', this)">😊 페이스스캐너</button>
+      <!-- H: 장비별 소견 -->
+      <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
+        <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-500 font-normal">8.</span><span>🔬</span> 장비별 분석 소견</h2>
+        <div class="space-y-6">
+          <!-- CT -->
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#2f98d4;">📡 3D/5D CT</span>
+              <img src="https://www.vatech.com/files/attach/images/288/313/8d7e2996adad9bb09e47e34c370d5b47.jpg"
+                   alt="Vatech PaX-i3D" class="h-14 w-auto object-contain rounded-lg"
+                   style="max-width:120px;"
+                   onerror="this.style.display='none'">
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <figure class="m-0">
+                <img src="https://dentalweb.oss-eu-central-1.aliyuncs.com/2021/11/full-digital-surgical-guide9.jpg"
+                     alt="3D CT 단면 — 골밀도·치조골 확인"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">CT 단면 영상</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://dentalweb.oss-eu-central-1.aliyuncs.com/2021/11/full-digital-surgical-guide10.jpg"
+                     alt="임플란트 식립 위치·각도 3D 계획"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">임플란트 계획</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://dentalweb.oss-eu-central-1.aliyuncs.com/2021/11/full-digital-surgical-guide16-1.jpg"
+                     alt="하악관(신경) 위치 시각화"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">신경 위치 확인</figcaption>
+              </figure>
+            </div>
+            <!-- CT mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#F0F7FF;border:1px solid #BFDBFE;">
+              <div class="text-xs font-bold mb-2" style="color:#2f98d4;">🦷 CT 분석 · 치아별 이상 위치</div>
+              <svg id="miniMapCT" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-600 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#7 부위:</strong> 치조골 소실 62% · 임플란트 식립 가능 (골폭 7.2mm 확인)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">하악 대구치 부위:</strong> 골밀도 710 HU · 정상(800HU) 이하 · 하악 전체 스케일링 권장</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">#19 부위:</strong> 하악관(신경) 거리 6.3mm · 신경치료 시 주의 요망</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">TMJ(턱관절):</strong> 정상 범위 · 좌우 대칭성 양호 (±1.2mm)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">상악동:</strong> 좌우 정상 · 임플란트 상악동 거상 불필요</div></li>
+            </ul>
+          </div>
+          <!-- 구강스캐너 -->
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#2EC4B6;">🦷 구강스캐너</span>
+              <img src="https://www.medit.com/wp-content/uploads/2023/11/medit-i700-1.webp"
+                   alt="Medit i700" class="h-14 w-auto object-contain rounded-lg"
+                   style="max-width:120px;"
+                   onerror="this.style.display='none'">
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <figure class="m-0">
+                <img src="https://dental-media.formlabs.com/filer_public_thumbnails/filer_public/9c/f7/9cf73bbe-e9cc-40fe-92e9-3e66b85def7e/untitled-7.jpg"
+                     alt="3D 디지털 치아 스캔 결과 모델"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">3D 치아 스캔</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://dental-media.formlabs.com/filer_public_thumbnails/filer_public/02/d9/02d92109-58a2-482c-9b31-a13150e329cb/image6.jpg"
+                     alt="디지털 인상 채득 및 크라운 설계"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">크라운 설계</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://dental-media.formlabs.com/filer_public_thumbnails/filer_public/7c/1c/7c1c984c-cbca-4bc1-b1d8-cf668263a70a/09242020_dental_draft_v2_275s.jpg"
+                     alt="교합 분석 및 투명 교정장치 제작"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">교합 분석</figcaption>
+              </figure>
+            </div>
+            <!-- 구강스캐너 mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#F0FDFC;border:1px solid #99F6E4;">
+              <div class="text-xs font-bold mb-2" style="color:#2EC4B6;">🦷 구강스캐너 분석 · 치아별 이상 위치</div>
+              <svg id="miniMapScan" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-600 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#6 치아:</strong> 치아 구조 30% 잔존 · 보존 불가 · 크라운 즉시 권장</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">전치부 심미:</strong> 스캔 결과 전치부 4개 치아 색조 불일치 (A3.5 vs A2)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">교합면 마모:</strong> 전반적 마모도 정상 범위 · 이갈이 소견 없음</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">구강 내 스캔 정밀도:</strong> 32개 치아 중 28개 정상 스캔 완료</div></li>
+            </ul>
+          </div>
+          <!-- 페이스스캐너 -->
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:#F4A261;">😊 페이스스캐너</span>
+              <img src="https://www.shining3ddental.com/hs-fs/hubfs/website-S3D-dental/images/2.%20Face%20Scanner/MetiSmile/37C3B8FC-60CF-40FA-B16F-672775DEA9FF.png"
+                   alt="Shining3D MetiSmile" class="h-14 w-auto object-contain rounded-lg"
+                   style="max-width:120px;"
+                   onerror="this.style.display='none'">
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <figure class="m-0">
+                <img src="https://www.shining3ddental.com/hs-fs/hubfs/website-S3D-dental/images/2.%20Face%20Scanner/MetiSmile/%E9%9D%A2%E6%89%AB%E7%BD%91%E9%A1%B5-14.png"
+                     alt="안면 대칭성·중선 편위 분석"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">안면 대칭 분석</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://www.shining3ddental.com/hs-fs/hubfs/website-S3D-dental/images/2.%20Face%20Scanner/MetiSmile/%E9%9D%A2%E6%89%AB%E7%BD%91%E9%A1%B5-15.png"
+                     alt="미소라인·치아 노출량 시뮬레이션"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">미소 시뮬레이션</figcaption>
+              </figure>
+              <figure class="m-0">
+                <img src="https://www.shining3ddental.com/hs-fs/hubfs/website-S3D-dental/images/2.%20Face%20Scanner/MetiSmile/%E9%9D%A2%E6%89%AB%E7%BD%91%E9%A1%B5-16.png"
+                     alt="치료 후 예상 스마일 디자인"
+                     class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
+                <figcaption class="text-center text-xs text-gray-600 mt-1">스마일 디자인</figcaption>
+              </figure>
+            </div>
+            <!-- 페이스스캐너 mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#FFF7ED;border:1px solid #FED7AA;">
+              <div class="text-xs font-bold mb-2" style="color:#F4A261;">🦷 페이스스캐너 분석 · 심미 치아 위치</div>
+              <svg id="miniMapFace" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-600 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">안면 중선:</strong> 상악 중선과 안면 중선 2.3mm 편위 (왼쪽) · 교정 고려 가능</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">미소 라인:</strong> 좌측 하강, 우측 상승 · 비대칭 점수 28/100 (주의 수준)</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">치아 노출량:</strong> 미소 시 상악 전치부 노출 8mm · 이상적 범위 내</div></li>
+              <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">페이셜 프로파일:</strong> Class I 골격 패턴 · 정상 범위</div></li>
+            </ul>
+          </div>
         </div>
-        <div id="tabCt" class="tab-content">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#7 부위:</strong> 치조골 소실 62% · 임플란트 식립 가능 (골폭 7.2mm 확인)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">하악 대구치 부위:</strong> 골밀도 710 HU · 정상(800HU) 이하 · 하악 전체 스케일링 권장</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">#19 부위:</strong> 하악관(신경) 거리 6.3mm · 신경치료 시 주의 요망</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">TMJ(턱관절):</strong> 정상 범위 · 좌우 대칭성 양호 (±1.2mm)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">상악동:</strong> 좌우 정상 · 임플란트 상악동 거상 불필요</div></li>
-          </ul>
-        </div>
-        <div id="tabOral" class="tab-content hidden">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#6 치아:</strong> 치아 구조 30% 잔존 · 보존 불가 · 크라운 즉시 권장</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">전치부 심미:</strong> 스캔 결과 전치부 4개 치아 색조 불일치 (A3.5 vs A2)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">교합면 마모:</strong> 전반적 마모도 정상 범위 · 이갈이 소견 없음</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">구강 내 스캔 정밀도:</strong> 32개 치아 중 28개 정상 스캔 완료</div></li>
-          </ul>
-        </div>
-        <div id="tabFace" class="tab-content hidden">
-          <ul class="space-y-3">
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">안면 중선:</strong> 상악 중선과 안면 중선 2.3mm 편위 (왼쪽) · 교정 고려 가능</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">미소 라인:</strong> 좌측 하강, 우측 상승 · 비대칭 점수 28/100 (주의 수준)</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">치아 노출량:</strong> 미소 시 상악 전치부 노출 8mm · 이상적 범위 내</div></li>
-            <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">페이셜 프로파일:</strong> Class I 골격 패턴 · 정상 범위</div></li>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-800 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">📋 해설</div>
+          <ul class="space-y-1.5 text-sm text-gray-800">
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>3가지 장비에서 개별 도출된 AI 분석 결과를 장비별로 정리합니다.</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong>3D/5D CT</strong>(Vatech PaX-i3D): 골밀도 이상 · 하악관(신경) 위치 · 상악동 상태 소견 제공</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong>구강스캐너</strong>(Medit i700): 치아 구조 잔존량 · 색조 불일치 · 교합면 마모 상태 제공</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span><strong>페이스스캐너</strong>(Shining3D MetiSmile): 중선 편위 · 미소 비대칭 점수 · 페이셜 프로파일 분류 제공</span></li>
+            <li class="flex gap-2 items-start"><span class="text-teal-400 font-bold mt-0.5">•</span><span>모든 장비 데이터는 AI 종합 소견 및 치료 우선순위 분석에 통합 반영됩니다.</span></li>
           </ul>
         </div>
       </section>
 
       <!-- Share / Download -->
       <section class="no-print bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
-        <h2 class="font-bold text-base mb-4 flex items-center gap-2" style="color:#0A2463;"><span>📤</span> 리포트 공유 및 저장</h2>
+        <h2 class="font-bold text-base mb-4 flex items-center gap-2" style="color:#0A2463;"><span>📤</span> 리포트 다운로드</h2>
         <div class="flex flex-wrap gap-3">
-          <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style="background:#0A2463;">🖨 PDF 다운로드</button>
-          <button class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style="background:#F0F9FF;color:#0A2463;border:1px solid #BAE6FD;">📱 QR코드 생성</button>
-          <button class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style="background:#F0FFF4;color:#065F46;border:1px solid #BBF7D0;">📧 이메일 전송</button>
-          <button class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style="background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;">💬 카카오톡 공유</button>
+          <button onclick="printPDF()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style="background:#0A2463;">🖨 PDF 다운로드</button>
         </div>
         <p class="text-xs text-gray-400 mt-3">※ 이 리포트는 AI 분석 결과이며, 최종 진단 및 치료 계획은 담당 원장님과 상담 후 결정됩니다.</p>
       </section>
@@ -663,6 +905,61 @@
       svg.appendChild(txt);
     });
 
+    // ---- Mini Tooth Maps (for 장비별 소견) ----
+    (function buildMiniMaps() {
+      const ns = 'http://www.w3.org/2000/svg';
+      const G='#2EC4B6', R='#E63946', Y='#F4A261', X='#9CA3AF';
+      const startX=28, step=19, toothW=17, toothH=24, upperY=8, lowerY=40;
+
+      function build(svgId, upperColors, lowerColors) {
+        const svg = document.getElementById(svgId);
+        if (!svg) return;
+        [
+          {colors: upperColors, y: upperY, label:'상악'},
+          {colors: lowerColors, y: lowerY, label:'하악'}
+        ].forEach(({colors, y, label}) => {
+          const lt = document.createElementNS(ns,'text');
+          lt.setAttribute('x','3'); lt.setAttribute('y', y + toothH/2 + 4);
+          lt.setAttribute('font-size','8'); lt.setAttribute('fill','#9CA3AF');
+          lt.setAttribute('font-family',"'Noto Sans KR'"); lt.textContent = label;
+          svg.appendChild(lt);
+          colors.forEach((color, i) => {
+            const x = startX + i * step;
+            const rect = document.createElementNS(ns,'rect');
+            rect.setAttribute('x', x); rect.setAttribute('y', y);
+            rect.setAttribute('width', toothW); rect.setAttribute('height', toothH);
+            rect.setAttribute('rx','3'); rect.setAttribute('fill', color);
+            rect.setAttribute('opacity', color === X ? '0.45' : '0.88');
+            svg.appendChild(rect);
+          });
+        });
+        // R / L guide
+        [['← 우',28],['좌 →',310]].forEach(([txt,x]) => {
+          const el = document.createElementNS(ns,'text');
+          el.setAttribute('x',x); el.setAttribute('y','68');
+          el.setAttribute('font-size','7'); el.setAttribute('fill','#CBD5E1');
+          el.setAttribute('text-anchor', x===28?'start':'end');
+          el.setAttribute('font-family',"'Noto Sans KR'"); el.textContent=txt;
+          svg.appendChild(el);
+        });
+      }
+
+      // 3D CT: #7(상악좌측1대구치)=RED pos13, #19(하악좌측1대구치)=YELLOW pos13, 하악대구치=YELLOW pos12
+      build('miniMapCT',
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,R,G,G],
+        [X,G,G,G,G,G,G,G,G,G,G,G,Y,Y,G,X]);
+
+      // 구강스캐너: #6(상악좌측1소구치)=RED pos11, 전치부4개=YELLOW pos6~9
+      build('miniMapScan',
+        [G,G,G,G,G,G,Y,Y,Y,Y,G,R,G,G,G,G],
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G]);
+
+      // 페이스스캐너: 전치부 심미(중선편위·미소라인)=YELLOW pos6~9
+      build('miniMapFace',
+        [G,G,G,G,G,G,Y,Y,Y,Y,G,G,G,G,G,G],
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G]);
+    })();
+
     function showTooth(key, t) {
       const modal = document.getElementById('toothModal');
       const detail = toothDetails[key] || null;
@@ -694,9 +991,23 @@
     }
 
     // Scroll to section
-    function scrollTo(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    function goTo(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      // Immediately reveal section (bypasses intersection observer delay)
+      el.classList.add('show');
+      el.scrollIntoView({ behavior: 'smooth' });
+      // Update active link immediately without waiting for scroll observer
+      const allSecs = ['secAI','secScore','secMap','secBone','secRisk','secPredict','secPriority','secEquip'];
+      document.querySelectorAll('#tocNav a').forEach((l, i) => {
+        l.className = allSecs.indexOf(id) === i ? 'sidebar-link active' : 'sidebar-link';
+      });
     }
+
+    // Mobile menu toggle
+    document.getElementById('menuBtn').onclick = () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    };
 
     // Sidebar active state
     const sections = ['secAI','secScore','secMap','secBone','secRisk','secPredict','secPriority','secEquip'];
@@ -714,11 +1025,76 @@
       if (el) sectionObserver.observe(el);
     });
 
-    // Section animations
+    // Section animations — reveal as they enter viewport (very low threshold for instant feel)
     const animObserver = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
     document.querySelectorAll('.section-anim').forEach(el => animObserver.observe(el));
+
+    // Embed logo as base64 in print header so it always renders in PDF
+    (function embedPrintLogo() {
+      const printLogoImg = document.querySelector('.print-logo-header img');
+      if (!printLogoImg) return;
+      const src = printLogoImg.getAttribute('src');
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        // White background for the logo (matches the inline style padding)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        try {
+          printLogoImg.src = canvas.toDataURL('image/png');
+        } catch(e) { /* CORS fallback: keep original src */ }
+      };
+      img.src = src;
+    })();
+
+    // PDF download — footer prints directly as HTML (print-color-adjust:exact keeps colors)
+    function printPDF() { window.print(); }
   </script>
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-10 w-auto rounded-lg" style="max-width:180px;background:white;padding:2px 6px;">
+          <span class="text-xs font-semibold" style="color:#00D4AA;">AI구강진단 플랫폼</span>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
+        <div class="text-sm">
+          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
+          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
+          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
+          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
+          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
+          <li><a href="articles.html" class="hover:text-white transition-colors">기사 보기</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">진료 분야</div>
+        <ul class="space-y-2 text-sm">
+          <li>임플란트</li>
+          <li>라미네이트</li>
+          <li>치아교정</li>
+          <li>AI 정밀 진단</li>
+          <li>미세현미경 치료</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
+      © 2026 디지털스마일치과 AI 구강진단 플랫폼. All rights reserved.
+    </div>
+  </footer>
 </body>
 </html>
