@@ -146,6 +146,10 @@
           <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-teal-400 inline-block"></span>정상: 19개소</div>
           <div class="flex items-center gap-2 text-xs text-gray-600"><span class="w-3 h-3 rounded-full bg-gray-300 inline-block"></span>결손: 4개소</div>
         </div>
+        <div class="mx-6 mb-6 mt-4 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 섹션은 3D CT·구강스캐너·페이스스캐너 세 장비에서 수집한 데이터를 AI가 통합 분석한 핵심 결과를 요약합니다. 하단의 색상 지표는 치아 상태를 4가지 등급으로 분류하며, 빨간색은 즉시 치료가 필요한 부위, 노란색은 주의 관찰이 필요한 부위, 초록색은 정상 치아, 회색은 결손 치아를 나타냅니다. 현재 3개소의 긴급 치료 부위와 6개소의 주의 관찰 부위가 확인되었으며, 19개소는 정상 상태를 유지하고 있습니다. 이 소견은 단순 X-ray 해석을 넘어 3차원 골밀도 데이터·디지털 구강 스캔·안면 분석 결과를 동시에 반영하여 도출된 것입니다. AI 분석의 신뢰도는 94.7%이며, 최종 치료 계획은 담당 원장과 심층 상담을 통해 결정하시기 바랍니다. 이 리포트는 환자가 자신의 구강 건강을 객관적으로 이해하고 치료에 능동적으로 참여하는 것을 목표로 합니다.
+        </div>
       </section>
 
       <!-- B: 건강 점수 -->
@@ -183,6 +187,10 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 차트는 환자의 전반적인 구강 건강 상태를 100점 만점으로 수치화한 결과입니다. 중앙의 도넛형 게이지 차트는 종합 건강 점수(73점)를 직관적으로 표시하며, 우측의 5개 항목별 점수 바는 치아 건강(68점)·잇몸 건강(71점)·골 건강(65점)·교합 상태(82점)·심미 상태(55점)를 각각 나타냅니다. 교합 상태가 가장 양호하며, 심미 상태와 골 건강이 상대적으로 낮은 점을 확인할 수 있습니다. 각 항목은 3D CT·구강스캐너·페이스스캐너 데이터를 기반으로 AI가 산출한 값으로, 단순 육안 검사와 달리 정밀한 디지털 데이터에 근거합니다. 점수가 낮은 항목일수록 우선적인 치료 및 관리가 필요하며, 정기 검진 시 점수 변화 추이를 통해 치료 효과를 객관적으로 확인할 수 있습니다. 100점에 가까울수록 최상급 구강 건강 상태를 의미합니다.
+        </div>
       </section>
 
       <!-- C: 치아 상태 맵 -->
@@ -210,6 +218,10 @@
           <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#E63946;"></span>즉시 치료</div>
           <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded inline-block" style="background:#9CA3AF;"></span>결손</div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 치아 상태 맵은 상악(윗턱) 16개와 하악(아랫턱) 16개, 총 32개의 치아 상태를 색상으로 시각화한 디지털 치식도입니다. 초록색은 정상, 주황색은 주의 관찰, 빨간색은 즉시 치료 필요, 회색은 결손 치아를 의미합니다. 각 치아 블록을 클릭하면 해당 치아의 AI 분석 상세 정보, 추천 치료 방법, 분석 신뢰도를 팝업으로 확인할 수 있습니다. 현재 상악 좌측 제1소구치(#6)와 제1대구치(#7)가 즉시 치료 필요 상태이며, 하악 좌측 제3소구치도 주의가 필요합니다. 이 맵은 구강스캐너의 3D STL 데이터와 3D CT의 DICOM 데이터를 결합하여 생성되었으며, 전통적인 파노라마 X-ray보다 훨씬 정밀한 위치 정보와 상태 분류를 제공합니다. 정기 검진마다 갱신되어 시간에 따른 변화를 추적합니다.
+        </div>
       </section>
 
       <!-- D: 골밀도 분석 -->
@@ -219,6 +231,10 @@
         <canvas id="boneChart" height="120"></canvas>
         <div class="mt-4 p-3 rounded-xl text-sm" style="background:#FEF3C7;border-left:3px solid #F4A261;">
           <strong class="text-yellow-800">⚠️ 주의:</strong> <span class="text-yellow-700">하악 대구치 부위 골밀도(710 HU)가 정상 기준(800 HU) 이하입니다. 임플란트 계획 시 골이식 가능성을 고려해야 합니다.</span>
+        </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 막대 그래프는 턱뼈 6개 부위의 골밀도를 Hounsfield Units(HU) 단위로 측정한 결과를 보여줍니다. HU는 3D CT 촬영으로 얻는 골밀도 측정 단위로, 수치가 높을수록 뼈가 단단하고 건강함을 의미합니다. 파란색 점선은 임플란트 식립에 적합한 최소 기준인 800 HU를 나타내며, 이 기준 이하의 부위는 시술 시 골이식(Bone Graft)이 필요할 수 있습니다. 현재 하악 대구치 부위(710 HU)가 유일하게 기준 이하를 기록하고 있으며, 상악 대구치 부위(780 HU)도 기준에 근접해 주의가 필요합니다. 반면 하악 소구치 부위(950 HU)와 상악 소구치 부위(920 HU)는 매우 양호한 골밀도를 나타냅니다. 이 데이터는 향후 임플란트 식립 계획 및 골이식 범위를 결정하는 데 핵심적으로 활용됩니다.
         </div>
       </section>
 
@@ -252,6 +268,10 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 레이더 차트는 6가지 주요 구강 건강 위험 요소(치주질환·충치위험·골소실·교합이상·심미문제·보철필요)의 현재 위험 수준을 0~100점으로 평가한 결과를 보여줍니다. 빨간색 영역은 환자의 현재 상태이며, 초록색 점선은 정상 기준선(20점)을 나타냅니다. 빨간 영역이 초록 점선에서 멀수록 해당 위험 요소가 심각한 상태임을 의미합니다. 현재 심미문제(80점)와 골소실(70점)이 가장 높은 위험 수준을 보이며, 충치위험(40점)은 상대적으로 양호합니다. 우측의 수치 카드는 각 위험 요소의 구체적인 원인과 점수를 함께 제공하여 어떤 부분을 우선적으로 개선해야 하는지 직관적으로 파악할 수 있도록 합니다. 치료 완료 후 재측정을 통해 위험 수준 감소를 객관적으로 추적할 수 있습니다.
+        </div>
       </section>
 
       <!-- F: 5년 예측 -->
@@ -270,6 +290,10 @@
             <div class="text-2xl font-black text-green-600 mb-1">73점 → 94점</div>
             <div class="text-xs text-green-600 leading-relaxed">6개월 내 핵심 치료 완료 시, 5년 후 최상급 구강 건강 유지. 추가 치료 최소화 가능</div>
           </div>
+        </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 꺾은선 그래프는 현재 구강 건강 점수(73점)에서 출발하여 향후 5년간 예상되는 점수 변화를 두 가지 시나리오로 비교합니다. 빨간 선은 치료를 받지 않을 경우의 예측 궤적으로, 치주질환 악화와 골소실 진행으로 인해 5년 후 점수가 28점까지 하락할 수 있음을 보여줍니다. 반면 초록 선은 권장 치료를 모두 진행했을 경우로, 6개월 이내 핵심 치료 완료 시 점수가 꾸준히 상승하여 5년 후 94점에 도달할 수 있음을 나타냅니다. 이 예측 모델은 환자의 현재 골밀도·치주 상태·교합 데이터와 수만 건의 치과 임상 통계를 결합한 AI 알고리즘으로 산출됩니다. 치료 여부에 따른 건강 점수 차이(66점)는 조기 치료의 중요성과 경제적 효과를 명확히 보여줍니다.
         </div>
       </section>
 
@@ -339,6 +363,10 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 가로 막대 그래프는 현재 필요한 치료 항목을 긴급도(0~100점) 순서로 정렬하여 보여줍니다. 빨간색 항목은 즉시 치료가 필요한 긴급 처치이며, 주황색은 단기 내 진행을 권장하는 항목, 파란색과 초록색은 중·장기 계획으로 진행 가능한 항목입니다. 가장 높은 긴급도를 보이는 #7 임플란트(95점)와 #6 크라운(88점)은 치료를 미룰 경우 인접 치아와 골조직에 연쇄적인 손상을 유발할 수 있습니다. 하단의 상세 카드는 각 치료 항목의 AI 근거, 예상 소요 기간, 진단 데이터 출처를 명시합니다. 이 우선순위 분석을 기반으로 담당 원장과 최적 치료 일정을 협의하시기 바랍니다. 모든 치료를 순서대로 완료할 경우 약 6개월 이내에 핵심 치료를 마칠 수 있을 것으로 예측됩니다.
+        </div>
       </section>
 
       <!-- H: 장비별 소견 탭 -->
@@ -373,6 +401,10 @@
             <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">치아 노출량:</strong> 미소 시 상악 전치부 노출 8mm · 이상적 범위 내</div></li>
             <li class="flex gap-3 text-sm p-3 rounded-xl bg-green-50"><span class="text-green-500 mt-0.5">●</span><div><strong class="text-green-700">페이셜 프로파일:</strong> Class I 골격 패턴 · 정상 범위</div></li>
           </ul>
+        </div>
+        <div class="mt-5 p-4 rounded-xl text-sm text-gray-600 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0;">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">📋 해설</div>
+          이 섹션은 3가지 핵심 장비에서 개별적으로 도출된 분석 결과를 탭 형식으로 정리합니다. '3D/5D CT' 탭은 Vatech PaX-i3D 장비로 촬영한 DICOM 데이터에서 AI가 식별한 골밀도 이상, 하악관(신경) 위치, 상악동 상태 등의 소견을 제공합니다. '구강스캐너' 탭은 Medit i700으로 스캔한 STL 데이터를 기반으로 치아 구조 잔존량, 색조 불일치, 교합면 마모 상태를 나타냅니다. '페이스스캐너' 탭은 안면 3D 스캔을 통해 분석된 중선 편위, 미소 비대칭 점수, 페이셜 프로파일 분류 결과를 보여줍니다. 각 장비의 소견은 색상으로 심각도를 구분하며, 빨간색은 즉시 치료, 주황색은 주의 관찰, 초록색은 정상을 의미합니다. 모든 장비 데이터는 AI 종합 소견 및 치료 우선순위 분석에 통합 반영됩니다.
         </div>
       </section>
 
