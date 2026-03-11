@@ -1081,7 +1081,7 @@
     // Pre-capture on page load
     window.addEventListener('load', function() { captureFooter(); });
 
-    // PDF button: ensure footer is captured before opening print dialog
+    // PDF button: capture footer then print (always prints even if capture fails)
     function printPDF() {
       const captureImg = document.getElementById('printFooterCapture');
       const isReady = captureImg && captureImg.src &&
@@ -1090,7 +1090,9 @@
       if (isReady) {
         window.print();
       } else {
-        captureFooter().then(function() { window.print(); });
+        captureFooter()
+          .then(function() { window.print(); })
+          .catch(function() { window.print(); });
       }
     }
   </script>
