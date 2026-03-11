@@ -48,7 +48,7 @@
   <nav class="no-print fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
       <a href="index.html" class="flex items-center gap-3">
-        <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-9 w-auto" style="filter:brightness(0) invert(1);max-width:164px;">
+        <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-9 w-auto rounded-lg" style="max-width:164px;background:white;padding:2px 6px;">
         <span class="text-xs font-semibold whitespace-nowrap" style="color:#00D4AA;">AI구강진단 플랫폼</span>
       </a>
       <ul class="hidden md:flex gap-6 items-center">
@@ -130,7 +130,7 @@
     <main class="flex-1 space-y-6 min-w-0">
 
       <!-- A: AI 종합 소견 -->
-      <section id="secAI" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden section-anim">
+      <section id="secAI" class="report-section bg-white rounded-2xl shadow-sm overflow-hidden section-anim" style="border:2px solid #00D4AA;">
         <div class="ai-insight p-6">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xl">🧠</span>
@@ -164,7 +164,7 @@
       </section>
 
       <!-- B: 건강 점수 -->
-      <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secScore" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
         <h2 class="font-bold text-lg mb-6 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">2.</span><span>📊</span> 전체 구강 건강 점수</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-48 flex-shrink-0 relative">
@@ -211,7 +211,7 @@
       </section>
 
       <!-- C: 치아 상태 맵 -->
-      <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secMap" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
         <h2 class="font-bold text-lg mb-2 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">3.</span><span>🦷</span> 치아별 상태 맵</h2>
         <p class="text-xs text-gray-400 mb-4">치아를 클릭하면 상세 정보를 확인할 수 있습니다</p>
 
@@ -248,7 +248,7 @@
       </section>
 
       <!-- D: 골밀도 분석 -->
-      <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secBone" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
         <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">4.</span><span>🦴</span> 부위별 골밀도 분석</h2>
         <p class="text-xs text-gray-400 mb-5">3D CT 데이터 기반 · Hounsfield Units(HU) 측정값</p>
         <canvas id="boneChart" height="120"></canvas>
@@ -269,7 +269,7 @@
       </section>
 
       <!-- E: 위험 요소 레이더 -->
-      <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secRisk" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
         <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">5.</span><span>⚠️</span> 위험 요소 분석</h2>
         <div class="flex flex-col md:flex-row gap-8 items-center">
           <div class="w-64 flex-shrink-0">
@@ -317,7 +317,7 @@
       </section>
 
       <!-- F: 5년 예측 -->
-      <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secPredict" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
         <h2 class="font-bold text-lg mb-1 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">6.</span><span>📈</span> 5년 구강 건강 예측 시나리오</h2>
         <p class="text-xs text-gray-400 mb-5">AI 예측 기반 · 개인 구강 데이터 + 통계 모델 분석</p>
         <canvas id="predictChart" height="110"></canvas>
@@ -346,7 +346,7 @@
       </section>
 
       <!-- G: 치료 우선순위 -->
-      <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secPriority" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #00D4AA;">
         <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">7.</span><span>🎯</span> 치료 우선순위</h2>
         <canvas id="priorityChart" height="130"></canvas>
         <div class="mt-6 space-y-3">
@@ -424,7 +424,7 @@
       </section>
 
       <!-- H: 장비별 소견 -->
-      <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
+      <section id="secEquip" class="report-section bg-white rounded-2xl shadow-sm p-6 section-anim" style="border:2px solid #2f98d4;">
         <h2 class="font-bold text-lg mb-5 flex items-center gap-2" style="color:#0A2463;"><span class="text-gray-300 font-normal">8.</span><span>🔬</span> 장비별 분석 소견</h2>
         <div class="space-y-6">
           <!-- CT -->
@@ -988,7 +988,7 @@
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
       <div class="md:col-span-2">
         <div class="flex items-center gap-3 mb-4">
-          <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-10 w-auto" style="filter:brightness(0) invert(1);max-width:180px;">
+          <img src="로고-디지털스마일치과.png" alt="디지털스마일치과" class="h-10 w-auto rounded-lg" style="max-width:180px;background:white;padding:2px 6px;">
           <span class="text-xs font-semibold" style="color:#00D4AA;">AI구강진단 플랫폼</span>
         </div>
         <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
