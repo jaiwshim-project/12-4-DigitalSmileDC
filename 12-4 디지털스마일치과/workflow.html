@@ -22,6 +22,7 @@
     @keyframes timerPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,0.4)} 50%{box-shadow:0 0 0 20px rgba(0,212,170,0)} }
     .ai-badge { background:linear-gradient(135deg,#667eea,#764ba2); display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; color:white; }
     .compare-row:nth-child(even) { background: #F8FAFC; }
+    .mobile-menu-item { display:block; padding:10px 0; color:rgba(255,255,255,0.8); border-bottom:1px solid rgba(255,255,255,0.1); }
     .time-bar { height:12px; border-radius:6px; transition:width 1.5s ease; }
     @keyframes flow2 { to { stroke-dashoffset: -24; } }
     .data-dot { animation: dataDot 1.5s infinite; }
@@ -31,7 +32,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="fixed top-0 left-0 right-0 z-50 h-16" id="navbar" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
+  <nav class="fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300" id="navbar" style="background:rgba(10,36,99,0.97);backdrop-filter:blur(12px);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-full">
       <a href="index.html" class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
@@ -41,20 +42,22 @@
         </div>
       </a>
       <ul class="hidden md:flex gap-6 items-center">
-        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm">홈</a></li>
-        <li><a href="ai-report.html" class="text-sm px-4 py-1.5 rounded-full font-semibold text-white" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트</a></li>
-        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm">연동 장비</a></li>
-        <li><a href="workflow.html" class="text-white text-sm font-semibold border-b-2 pb-0.5" style="border-color:#00D4AA;">AI 워크플로우</a></li>
-        <li><a href="articles.html" class="text-gray-300 hover:text-white text-sm">기사 보기</a></li>
+        <li><a href="index.html" class="text-gray-300 hover:text-white text-sm transition-colors">홈</a></li>
+        <li><a href="ai-report.html" class="text-gray-300 hover:text-white text-sm transition-colors">AI 진단 리포트</a></li>
+        <li><a href="equipment.html" class="text-gray-300 hover:text-white text-sm transition-colors">연동 장비</a></li>
+        <li><a href="workflow.html" class="text-white text-sm font-medium border-b-2 pb-0.5" style="border-color:#00D4AA;">AI 워크플로우</a></li>
+        <li><a href="articles.html" class="text-gray-300 hover:text-white text-sm transition-colors">기사 보기</a></li>
+        <li><a href="https://www.digitalsmiledc.com/naver" target="_blank" class="text-sm px-4 py-1.5 rounded-full border font-medium transition-all hover:bg-white" style="border-color:#00D4AA;color:#00D4AA;">📅 네이버 예약</a></li>
       </ul>
-      <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+      <button id="menuBtn" class="md:hidden text-white text-2xl leading-none">☰</button>
     </div>
     <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 border-t border-white/10">
-      <a href="index.html" class="block py-2.5 text-gray-300 border-b border-white/10 text-sm">🏠 홈</a>
-      <a href="ai-report.html" class="block py-2.5 border-b border-white/10 text-sm" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
-      <a href="equipment.html" class="block py-2.5 text-gray-300 border-b border-white/10 text-sm">🔬 연동 장비</a>
-      <a href="workflow.html" class="block py-2.5 text-white text-sm font-semibold">⚙️ AI 워크플로우</a>
-      <a href="articles.html" class="block py-2.5 text-gray-300 text-sm">📰 기사 보기</a>
+      <a href="index.html" class="mobile-menu-item">🏠 홈</a>
+      <a href="ai-report.html" class="mobile-menu-item" style="color:#00D4AA;">🤖 AI 진단 리포트</a>
+      <a href="equipment.html" class="mobile-menu-item">🔬 연동 장비</a>
+      <a href="workflow.html" class="mobile-menu-item" style="color:#00D4AA;">⚙️ AI 워크플로우</a>
+      <a href="articles.html" class="mobile-menu-item">📰 기사 보기</a>
+      <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="mobile-menu-item">📅 네이버 예약</a>
     </div>
   </nav>
 
@@ -360,9 +363,47 @@
     <a href="ai-report.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-white font-bold text-lg" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">AI 진단 리포트 체험하기 →</a>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-8 px-6 text-center">
-    <div class="text-sm">© 2026 디지털스마일치과 AI 진단 플랫폼 · <a href="index.html" class="hover:text-white">홈으로</a></div>
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">DS</div>
+          <div>
+            <div class="text-white font-bold">디지털스마일치과</div>
+            <div class="text-xs" style="color:#00D4AA;">AI 진단 플랫폼</div>
+          </div>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">디지털 장비 + AI 분석으로 환자와 원장이 함께 데이터를 보고 이해하는 새로운 치과 진단의 기준을 만듭니다.</p>
+        <div class="text-sm">
+          <div>🌐 <a href="https://www.digitalsmiledc.com" target="_blank" class="hover:text-white">www.digitalsmiledc.com</a></div>
+          <div class="mt-1">📅 <a href="https://www.digitalsmiledc.com/naver" target="_blank" class="hover:text-white" style="color:#00D4AA;">네이버 예약 바로가기</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">빠른 메뉴</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white transition-colors">홈</a></li>
+          <li><a href="ai-report.html" class="hover:text-white transition-colors">AI 진단 리포트</a></li>
+          <li><a href="equipment.html" class="hover:text-white transition-colors">연동 장비</a></li>
+          <li><a href="workflow.html" class="hover:text-white transition-colors">AI 워크플로우</a></li>
+          <li><a href="articles.html" class="hover:text-white transition-colors">기사 보기</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-white font-semibold mb-4">진료 분야</div>
+        <ul class="space-y-2 text-sm">
+          <li>임플란트</li>
+          <li>라미네이트</li>
+          <li>치아교정</li>
+          <li>AI 정밀 진단</li>
+          <li>미세현미경 치료</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800 text-center text-sm">
+      © 2026 디지털스마일치과 AI 진단 플랫폼. All rights reserved.
+    </div>
   </footer>
 
   <script>
