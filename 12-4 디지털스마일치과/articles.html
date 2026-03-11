@@ -149,62 +149,6 @@
           <span id="articleCount" class="text-sm text-gray-400">0개의 기사</span>
         </div>
 
-        <!-- Right controls -->
-        <div class="flex items-center gap-2">
-          <button onclick="toggleSettings()"
-            class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-500 hover:border-gray-300 hover:text-gray-700 transition-all shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            API 설정
-          </button>
-          <button onclick="openPanel()"
-            class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
-            style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            기사 추가
-          </button>
-        </div>
-      </div>
-
-      <!-- API Settings (inline collapsible) -->
-      <div id="settingsPanel" class="hidden mb-6 bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-        <div class="flex items-start gap-3 mb-4">
-          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(102,126,234,0.1);">
-            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-            </svg>
-          </div>
-          <div>
-            <div class="font-semibold text-gray-800 text-sm">Google Gemini API 키 설정</div>
-            <div class="text-xs text-gray-500 mt-0.5">Gemini AI 요약 자동 생성에 사용됩니다. 키는 브라우저 로컬에만 저장됩니다.</div>
-          </div>
-          <!-- Gemini API 가져오기 버튼 -->
-          <a href="https://aistudio.google.com/app/apikey" target="_blank"
-            class="ml-auto flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-all hover:shadow-md"
-            style="background:linear-gradient(135deg,#4285F4,#34A853);">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fff"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"/>
-            </svg>
-            API 키 가져오기
-          </a>
-        </div>
-        <div class="flex gap-2">
-          <input id="apiKeyInput" type="password" placeholder="AIza..."
-            class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 font-mono"/>
-          <button onclick="saveApiKey()"
-            class="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:shadow-md"
-            style="background:linear-gradient(135deg,#4285F4,#34A853);">저장</button>
-        </div>
-        <p id="apiKeyStatus" class="text-xs text-gray-400 mt-2"></p>
       </div>
 
       <!-- ===== BOARD VIEW ===== -->
@@ -219,7 +163,7 @@
           </div>
           <h3 class="font-bold text-gray-600 mb-2">등록된 기사가 없습니다</h3>
           <p class="text-sm text-gray-400 mb-6">상단의 "기사 추가" 버튼으로 URL을 등록하면<br>AI가 자동으로 한국어 요약을 생성합니다</p>
-          <button onclick="openPanel()"
+          <button onclick="showAdminLogin()"
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-semibold"
             style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,7 +202,7 @@
           </div>
           <h3 class="font-bold text-gray-600 mb-2">등록된 기사가 없습니다</h3>
           <p class="text-sm text-gray-400 mb-6">상단의 "기사 추가" 버튼으로 URL을 등록하면<br>AI가 자동으로 한국어 요약을 생성합니다</p>
-          <button onclick="openPanel()"
+          <button onclick="showAdminLogin()"
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-semibold"
             style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -318,150 +262,86 @@
     </div>
   </footer>
 
-  <!-- ===== OVERLAY ===== -->
-  <div id="overlay" class="fixed inset-0 z-40 overlay" style="background:rgba(0,0,0,0.45);" onclick="closePanel()"></div>
+  <!-- ===== 관리자 패널 ===== -->
+  <div style="text-align:center; padding: 12px 0 0;">
+    <button onclick="showAdminLogin()" id="adminToggleBtn"
+      style="background:none;border:none;color:#9ca3af;font-size:0.78rem;cursor:pointer;font-family:inherit;">
+      ⚙ 관리자
+    </button>
+  </div>
 
-  <!-- ===== ADD ARTICLE SIDE PANEL ===== -->
-  <div id="sidePanel" class="fixed top-0 right-0 h-full z-50 side-panel overflow-y-auto"
-    style="width:min(500px,100vw);background:white;box-shadow:-8px 0 40px rgba(0,0,0,0.18);">
-    <div class="p-6 pb-10">
+  <!-- 비밀번호 입력 -->
+  <div id="adminLoginBox" style="display:none; max-width:360px; margin:0 auto 24px; padding:24px; background:#fff; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.1); text-align:center;">
+    <p style="font-size:0.9rem;font-weight:600;color:#0A2463;margin-bottom:14px;">관리자 비밀번호</p>
+    <input type="password" id="adminPw" maxlength="10" placeholder="비밀번호 입력"
+      style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:1rem;text-align:center;letter-spacing:0.3em;outline:none;font-family:inherit;margin-bottom:10px;box-sizing:border-box;"
+      onkeydown="if(event.key==='Enter') adminLogin()">
+    <button onclick="adminLogin()"
+      style="width:100%;padding:11px;background:linear-gradient(135deg,#0A2463,#2f98d4);color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:inherit;">
+      확인
+    </button>
+    <div id="adminPwError" style="color:#e53935;font-size:0.8rem;margin-top:8px;display:none;">비밀번호가 올바르지 않습니다.</div>
+  </div>
 
-      <!-- Panel header -->
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h2 class="text-lg font-bold text-gray-800">기사 추가</h2>
-          <p class="text-sm text-gray-500 mt-0.5">URL과 제목 입력 → AI 자동 요약 생성</p>
-        </div>
-        <button onclick="closePanel()"
-          class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all">
-          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Form -->
-      <div class="space-y-4">
-
-        <!-- URL -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-            기사 URL <span class="text-red-400">*</span>
-          </label>
-          <input id="inputUrl" type="url" placeholder="https://example.com/article"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
-        </div>
-
-        <!-- Title -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-            제목 <span class="text-red-400">*</span>
-          </label>
-          <input id="inputTitle" type="text" placeholder="기사 또는 블로그 제목을 입력하세요"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
-        </div>
-
-        <!-- Thumbnail URL -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-            썸네일 이미지 URL <span class="text-gray-400 font-normal text-xs">(선택)</span>
-          </label>
-          <input id="inputThumbnail" type="url" placeholder="https://example.com/image.jpg"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
-        </div>
-
-        <!-- Description (helps AI) -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-            본문 발췌 / 메모 <span class="text-gray-400 font-normal text-xs">(선택 · 붙여넣으면 AI 요약 품질 향상)</span>
-          </label>
-          <textarea id="inputDesc" rows="3"
-            placeholder="기사 핵심 내용을 짧게 붙여넣거나 메모하세요..."
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 resize-none"></textarea>
-        </div>
-
-        <!-- AI Generate Button -->
-        <button id="btnGenerate" onclick="generateAI()"
-          class="w-full py-3 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:shadow-md"
-          style="background:linear-gradient(135deg,#667eea,#764ba2);">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          ✨ AI 요약 자동 생성 (Gemini AI)
-        </button>
-
-        <!-- AI Result Box -->
-        <div id="aiResult" class="hidden rounded-xl p-4 border" style="background:rgba(102,126,234,0.05);border-color:rgba(102,126,234,0.25);">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-5 h-5 rounded-full flex items-center justify-center ai-badge">
-              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
-              </svg>
-            </div>
-            <span class="text-xs font-bold text-purple-700">Gemini AI 생성 결과</span>
-            <span class="ml-auto text-xs text-gray-400">자동 입력됨 ↓</span>
-          </div>
-          <p id="aiSummaryPreview" class="text-sm text-gray-700 leading-relaxed border-b border-purple-100 pb-3 mb-3"></p>
-          <div class="flex flex-wrap gap-3 text-xs">
-            <div><span class="text-gray-400">카테고리:</span> <span id="aiCategoryPreview" class="font-semibold text-purple-600 ml-1"></span></div>
-            <div><span class="text-gray-400">읽기 시간:</span> <span id="aiReadTimePreview" class="font-semibold text-gray-600 ml-1"></span></div>
-          </div>
-          <div id="aiTagsPreview" class="flex flex-wrap gap-1 mt-2"></div>
-        </div>
-
-        <!-- Divider -->
-        <div class="flex items-center gap-3 py-1">
-          <div class="flex-1 h-px bg-gray-200"></div>
-          <span class="text-xs text-gray-400">직접 입력 또는 AI 자동 완성</span>
-          <div class="flex-1 h-px bg-gray-200"></div>
-        </div>
-
-        <!-- Summary manual input -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">요약</label>
-          <textarea id="inputSummary" rows="3"
-            placeholder="AI 요약 생성 후 자동 입력되거나 직접 입력하세요"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 resize-none"></textarea>
-        </div>
-
-        <!-- Category + Read Time -->
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">카테고리</label>
-            <select id="inputCategory"
-              class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 bg-white">
-              <option value="AI 진단">AI 진단</option>
-              <option value="임플란트">임플란트</option>
-              <option value="치아교정">치아교정</option>
-              <option value="구강건강">구강건강</option>
-              <option value="의료기술">의료기술</option>
-              <option value="기타">기타</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">읽기 시간</label>
-            <input id="inputReadTime" type="text" placeholder="예: 3분" value="3분"
-              class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400"/>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-            태그 <span class="text-gray-400 font-normal text-xs">(쉼표로 구분)</span>
-          </label>
-          <input id="inputTags" type="text" placeholder="AI, 치과, 임플란트"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50"/>
-        </div>
-
-        <!-- Submit -->
-        <button onclick="submitArticle()"
-          class="w-full py-3.5 rounded-xl text-white font-bold text-base transition-all hover:shadow-xl mt-1"
-          style="background:linear-gradient(135deg,#00D4AA,#2f98d4);">
-          게시하기 →
-        </button>
-      </div>
+  <!-- 기사 추가 폼 -->
+  <div id="adminForm" style="display:none; max-width:700px; margin:0 auto 40px; padding:28px; background:#fff; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h3 style="font-size:1rem;font-weight:700;color:#0A2463;">+ 기사 추가</h3>
+      <button onclick="adminClose()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#999;">✕</button>
     </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">기사 제목 *</label>
+        <input type="text" id="af-title" placeholder="기사 제목을 입력하세요"
+          style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">링크 주소 (URL) *</label>
+        <input type="url" id="af-url" placeholder="https://blog.naver.com/..."
+          style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">카테고리</label>
+          <select id="af-category"
+            style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;background:#fff;box-sizing:border-box;">
+            <option value="AI 진단">AI 진단</option>
+            <option value="임플란트">임플란트</option>
+            <option value="치아교정">치아교정</option>
+            <option value="구강건강">구강건강</option>
+            <option value="의료기술">의료기술</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">태그 (쉼표 구분)</label>
+          <input type="text" id="af-tags" placeholder="예: AI, 치과, 임플란트"
+            style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;box-sizing:border-box;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">날짜</label>
+          <input type="text" id="af-date" placeholder="예: 2026-03-11"
+            style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">썸네일 URL (선택)</label>
+          <input type="url" id="af-thumb" placeholder="이미지 주소"
+            style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;box-sizing:border-box;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:0.8rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">요약 (선택)</label>
+        <textarea id="af-summary" rows="3" placeholder="기사 핵심 내용을 간략히 입력하세요"
+          style="width:100%;padding:10px 14px;border:1.5px solid #e0e6ef;border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+      </div>
+      <button id="afAddBtn" onclick="adminAddArticle()"
+        style="padding:13px;background:linear-gradient(135deg,#0A2463,#2f98d4);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:inherit;">
+        기사 추가하기
+      </button>
+    </div>
+    <div id="afToast" style="display:none;margin-top:12px;padding:10px;background:#e8f5e9;color:#2e7d32;border-radius:8px;font-size:0.85rem;text-align:center;"></div>
   </div>
 
   <script>
@@ -610,15 +490,6 @@
           window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.4)' : 'none';
       });
 
-      // Load saved API key status
-      const savedKey = localStorage.getItem('ds_gemini_key');
-      if (savedKey) {
-        document.getElementById('apiKeyInput').value = savedKey;
-        const st = document.getElementById('apiKeyStatus');
-        st.textContent = '✓ Gemini API 키가 저장되어 있습니다';
-        st.style.color = '#10b981';
-      }
-
       await loadArticles();
       renderArticles();
     }
@@ -652,210 +523,77 @@
       }
     }
 
-    // ==================== SETTINGS ====================
-    function toggleSettings() {
-      document.getElementById('settingsPanel').classList.toggle('hidden');
+    // ==================== 관리자 ====================
+    const ADMIN_PW = '1234';
+
+    function showAdminLogin() {
+      document.getElementById('adminToggleBtn').style.display = 'none';
+      document.getElementById('adminLoginBox').style.display = 'block';
+      document.getElementById('adminPw').focus();
     }
-
-    function saveApiKey() {
-      const key = document.getElementById('apiKeyInput').value.trim();
-      if (!key) return;
-      localStorage.setItem('ds_gemini_key', key);
-      const st = document.getElementById('apiKeyStatus');
-      st.textContent = '✓ Gemini API 키가 저장되었습니다';
-      st.style.color = '#10b981';
-    }
-
-    // ==================== PANEL ====================
-    function openPanel() {
-      const pw = prompt('관리자 비밀번호를 입력하세요:');
-      if (pw !== '1234') {
-        if (pw !== null) showToast('비밀번호가 올바르지 않습니다', 'error');
-        return;
-      }
-      document.getElementById('sidePanel').classList.add('open');
-      document.getElementById('overlay').classList.add('visible');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closePanel() {
-      document.getElementById('sidePanel').classList.remove('open');
-      document.getElementById('overlay').classList.remove('visible');
-      document.body.style.overflow = '';
-    }
-
-    // ==================== AI GENERATE (Google Gemini) ====================
-    async function generateAI() {
-      const url   = document.getElementById('inputUrl').value.trim();
-      const title = document.getElementById('inputTitle').value.trim();
-      const desc  = document.getElementById('inputDesc').value.trim();
-
-      if (!url || !title) {
-        showToast('URL과 제목을 먼저 입력해주세요', 'error');
-        return;
-      }
-
-      const apiKey = localStorage.getItem('ds_gemini_key');
-      if (!apiKey) {
-        showToast('Gemini API 키를 먼저 설정해주세요 (API 설정 버튼)', 'error');
-        document.getElementById('settingsPanel').classList.remove('hidden');
-        return;
-      }
-
-      const btn = document.getElementById('btnGenerate');
-      btn.disabled = true;
-      btn.innerHTML = `
-        <svg class="w-4 h-4 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Gemini AI 분석 중...`;
-
-      try {
-        const prompt = `다음 기사/블로그 정보를 바탕으로 치과 AI 플랫폼에 게시할 한국어 메타데이터를 생성하세요.
-
-URL: ${url}
-제목: ${title}
-설명/발췌: ${desc || '없음'}
-
-아래 JSON 형식으로만 응답하세요 (JSON 외 텍스트 없이, 마크다운 코드블록 없이):
-{
-  "summary": "기사 내용을 2~3문장으로 요약. 치과·의료·AI 기술 관련 핵심 내용 위주로 한국어로 작성.",
-  "category": "AI 진단, 임플란트, 치아교정, 구강건강, 의료기술, 기타 중 하나만 선택",
-  "tags": ["태그1", "태그2", "태그3"],
-  "readingTime": "예상 읽기 시간 (예: 3분)"
-}`;
-
-        const resp = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.3, maxOutputTokens: 512 }
-            })
-          }
-        );
-
-        if (!resp.ok) {
-          const errData = await resp.json().catch(() => ({}));
-          throw new Error(errData.error?.message || `HTTP ${resp.status}`);
+    function adminLogin() {
+      if (document.getElementById('adminPw').value === ADMIN_PW) {
+        document.getElementById('adminLoginBox').style.display = 'none';
+        document.getElementById('adminForm').style.display = 'block';
+        // 오늘 날짜 자동 입력
+        const today = new Date();
+        const dateEl = document.getElementById('af-date');
+        if (!dateEl.value) {
+          dateEl.value = today.getFullYear() + '-' +
+            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+            String(today.getDate()).padStart(2, '0');
         }
-
-        const data = await resp.json();
-        const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (!raw) throw new Error('Gemini 응답이 비어 있습니다');
-
-        // Strip markdown code blocks if present
-        const jsonStr = raw.replace(/^```json?\s*/m, '').replace(/```\s*$/m, '').trim();
-        const gen = JSON.parse(jsonStr);
-
-        // Show preview
-        document.getElementById('aiSummaryPreview').textContent  = gen.summary;
-        document.getElementById('aiCategoryPreview').textContent = gen.category;
-        document.getElementById('aiReadTimePreview').textContent = gen.readingTime;
-
-        const tagsBox = document.getElementById('aiTagsPreview');
-        tagsBox.innerHTML = '';
-        (gen.tags || []).forEach(t => {
-          const chip = document.createElement('span');
-          chip.className = 'tag-chip';
-          chip.textContent = '#' + t;
-          tagsBox.appendChild(chip);
-        });
-
-        document.getElementById('aiResult').classList.remove('hidden');
-
-        // Auto-fill form fields
-        document.getElementById('inputSummary').value  = gen.summary;
-        document.getElementById('inputReadTime').value = gen.readingTime;
-        document.getElementById('inputTags').value     = (gen.tags || []).join(', ');
-
-        const catSelect = document.getElementById('inputCategory');
-        const validCats = ['AI 진단', '임플란트', '치아교정', '구강건강', '의료기술', '기타'];
-        if (validCats.includes(gen.category)) catSelect.value = gen.category;
-
-        showToast('AI 요약이 생성되었습니다!', 'success');
-
-      } catch (err) {
-        console.error(err);
-        showToast('생성 실패: ' + err.message, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          ✨ AI 요약 자동 생성 (Gemini AI)`;
+        document.getElementById('af-title').focus();
+      } else {
+        document.getElementById('adminPwError').style.display = 'block';
+        document.getElementById('adminPw').value = '';
       }
     }
+    function adminClose() {
+      document.getElementById('adminForm').style.display = 'none';
+      document.getElementById('adminToggleBtn').style.display = 'inline-block';
+      document.getElementById('adminPw').value = '';
+      document.getElementById('adminPwError').style.display = 'none';
+    }
+    async function adminAddArticle() {
+      const title    = document.getElementById('af-title').value.trim();
+      const url      = document.getElementById('af-url').value.trim();
+      const category = document.getElementById('af-category').value;
+      const tagsRaw  = document.getElementById('af-tags').value.trim();
+      const date     = document.getElementById('af-date').value.trim() || '';
+      const thumbnail= document.getElementById('af-thumb').value.trim() || '';
+      const summary  = document.getElementById('af-summary').value.trim() || '기사 내용을 확인하려면 링크를 클릭하세요.';
 
-    // ==================== SUBMIT ====================
-    async function submitArticle() {
-      const url      = document.getElementById('inputUrl').value.trim();
-      const title    = document.getElementById('inputTitle').value.trim();
-      const thumbnail= document.getElementById('inputThumbnail').value.trim();
-      const summary  = document.getElementById('inputSummary').value.trim();
-      const category = document.getElementById('inputCategory').value;
-      const readTime = document.getElementById('inputReadTime').value.trim() || '3분';
-      const tagsRaw  = document.getElementById('inputTags').value.trim();
-
-      if (!url || !title) {
-        showToast('URL과 제목은 필수입니다', 'error');
-        return;
-      }
+      if (!title) { alert('기사 제목을 입력하세요.'); return; }
+      if (!url)   { alert('링크 주소를 입력하세요.'); return; }
 
       const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
-      const article = {
-        id: Date.now(),
-        url,
-        title,
-        thumbnail,
-        summary: summary || '기사 내용을 확인하려면 링크를 클릭하세요.',
-        category,
-        readTime,
-        tags,
-        date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '-').replace(/ /g, '').replace(/-$/, '')
-      };
+      const btn = document.getElementById('afAddBtn');
+      btn.disabled = true; btn.textContent = '저장 중...';
 
-      // Supabase에 저장
       const { data: inserted, error } = await sb
         .from('articles')
-        .insert([{
-          url:       article.url,
-          title:     article.title,
-          thumbnail: article.thumbnail,
-          summary:   article.summary,
-          category:  article.category,
-          read_time: article.readTime,
-          tags:      article.tags,
-          date:      article.date
-        }])
+        .insert([{ url, title, thumbnail, summary, category, read_time: '3분', tags, date }])
         .select()
         .single();
 
-      if (error) {
-        showToast('저장 실패: ' + error.message, 'error');
-        return;
-      }
+      btn.disabled = false; btn.textContent = '기사 추가하기';
+
+      if (error) { alert('저장 실패: ' + error.message); return; }
 
       articles.unshift(rowToArticle(inserted));
-
-      closePanel();
-      resetForm();
       renderArticles();
-      showToast('기사가 등록되었습니다!', 'success');
-    }
 
-    function resetForm() {
-      ['inputUrl','inputTitle','inputThumbnail','inputDesc','inputSummary','inputTags'].forEach(id => {
+      ['af-title','af-url','af-tags','af-date','af-thumb','af-summary'].forEach(id => {
         document.getElementById(id).value = '';
       });
-      document.getElementById('inputReadTime').value = '3분';
-      document.getElementById('inputCategory').value = 'AI 진단';
-      document.getElementById('aiResult').classList.add('hidden');
+      document.getElementById('af-category').value = 'AI 진단';
+
+      const toast = document.getElementById('afToast');
+      toast.textContent = '✅ 기사가 추가되었습니다!';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
     }
 
     // ==================== RENDER ====================
