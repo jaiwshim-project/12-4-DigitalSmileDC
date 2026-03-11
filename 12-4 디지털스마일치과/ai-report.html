@@ -59,9 +59,11 @@
       .max-w-6xl { max-width:100% !important; padding:0 12px !important; }
       .space-y-6 > * + * { margin-top:16px !important; }
       canvas { max-width:100% !important; }
+      /* Page break: patient header on page 1, section 1 starts page 2 */
+      #secAI { break-before: page; page-break-before: always; }
       /* Hide real footer; show captured footer image */
       footer { display:none !important; }
-      #printFooterCapture { display:block !important; width:100%; margin-top:24px; }
+      #printFooterCapture { display:block !important; width:100% !important; margin-top:24px; }
       /* Print-only logo: fixed → repeats top-right on every page */
       .print-logo-header {
         display: flex !important;
@@ -175,7 +177,6 @@
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xl">🧠</span>
             <h2 class="text-white font-bold text-lg"><span class="font-normal mr-1" style="color:#9CA3AF;">1.</span> AI 종합 소견</h2>
-            <span class="status-badge badge-ai text-xs ml-auto">Claude Haiku 분석</span>
           </div>
           <p class="text-gray-200 leading-relaxed text-sm">
             3D CT, 구강스캐너, 페이스스캐너 통합 데이터 분석 결과, 전반적인 구강 건강 상태는 <strong class="text-teal-300">양호(73점)</strong> 수준입니다.
@@ -626,7 +627,7 @@
       <section class="no-print bg-white rounded-2xl shadow-sm border border-gray-100 p-6 section-anim">
         <h2 class="font-bold text-base mb-4 flex items-center gap-2" style="color:#0A2463;"><span>📤</span> 리포트 다운로드</h2>
         <div class="flex flex-wrap gap-3">
-          <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style="background:#0A2463;">🖨 PDF 다운로드</button>
+          <button onclick="printPDF()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style="background:#0A2463;">🖨 PDF 다운로드</button>
         </div>
         <p class="text-xs text-gray-400 mt-3">※ 이 리포트는 AI 분석 결과이며, 최종 진단 및 치료 계획은 담당 원장님과 상담 후 결정됩니다.</p>
       </section>
@@ -1055,12 +1056,14 @@
       img.src = src;
     })();
 
-    // Capture footer as image for pixel-perfect PDF print
-    window.addEventListener('load', function() {
+    // Capture footer → returns a Promise resolving to data URL
+    function captureFooter() {
       const footer = document.querySelector('footer');
       const captureImg = document.getElementById('printFooterCapture');
-      if (!footer || !captureImg || typeof html2canvas === 'undefined') return;
-      html2canvas(footer, {
+      if (!footer || !captureImg || typeof html2canvas === 'undefined') {
+        return Promise.resolve(null);
+      }
+      return html2canvas(footer, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
@@ -1069,24 +1072,27 @@
         width: footer.scrollWidth,
         windowWidth: document.documentElement.scrollWidth
       }).then(function(canvas) {
-        captureImg.src = canvas.toDataURL('image/png');
+        const dataURL = canvas.toDataURL('image/png');
+        captureImg.src = dataURL;
+        return dataURL;
       });
-    });
+    }
 
-    // Re-capture on beforeprint in case layout changed
-    window.addEventListener('beforeprint', function() {
-      const footer = document.querySelector('footer');
+    // Pre-capture on page load
+    window.addEventListener('load', function() { captureFooter(); });
+
+    // PDF button: ensure footer is captured before opening print dialog
+    function printPDF() {
       const captureImg = document.getElementById('printFooterCapture');
-      if (!footer || !captureImg || typeof html2canvas === 'undefined') return;
-      if (!captureImg.src || captureImg.src === window.location.href) {
-        html2canvas(footer, {
-          scale: 2, useCORS: true, allowTaint: true,
-          backgroundColor: '#111827', logging: false
-        }).then(function(canvas) {
-          captureImg.src = canvas.toDataURL('image/png');
-        });
+      const isReady = captureImg && captureImg.src &&
+                      captureImg.src !== '' &&
+                      captureImg.src !== window.location.href;
+      if (isReady) {
+        window.print();
+      } else {
+        captureFooter().then(function() { window.print(); });
       }
-    });
+    }
   </script>
   <!-- Print-only: captured footer screenshot (hidden on screen) -->
   <img id="printFooterCapture" style="display:none;" alt="footer" />
