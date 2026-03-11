@@ -182,7 +182,7 @@
                 <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">제목 / 요약</th>
                 <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-28 hidden md:table-cell">카테고리</th>
                 <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-24 hidden md:table-cell">날짜</th>
-                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-24">링크</th>
+                <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider w-24">삭제</th>
               </tr>
             </thead>
             <tbody id="boardBody"></tbody>
@@ -427,7 +427,7 @@
         url:       row.url,
         title:     row.title,
         thumbnail: row.thumbnail || '',
-        summary:   row.summary   || '',
+        summary:   (row.summary === '기사 내용을 확인하려면 링크를 클릭하세요.' ? '' : row.summary) || '',
         category:  row.category  || 'AI 진단',
         readTime:  row.read_time || '3분',
         tags:      row.tags      || [],
@@ -440,7 +440,14 @@
     let currentView = 'board';
 
     // ==================== INIT ====================
+    async function cleanDefaultSummary() {
+      await sb.from('articles')
+        .update({ summary: '' })
+        .eq('summary', '기사 내용을 확인하려면 링크를 클릭하세요.');
+    }
+
     async function loadArticles() {
+      await cleanDefaultSummary();
       const { data, error } = await sb
         .from('articles')
         .select('*')
@@ -622,7 +629,7 @@
       const tagsRaw  = document.getElementById('af-tags').value.trim();
       const date     = document.getElementById('af-date').value.trim() || '';
       const thumbnail= document.getElementById('af-thumb').value.trim() || '';
-      const summary  = document.getElementById('af-summary').value.trim() || '기사 내용을 확인하려면 링크를 클릭하세요.';
+      const summary  = document.getElementById('af-summary').value.trim() || '';
 
       if (!title) { alert('기사 제목을 입력하세요.'); return; }
       if (!url)   { alert('링크 주소를 입력하세요.'); return; }
