@@ -427,7 +427,7 @@
         url:       row.url,
         title:     row.title,
         thumbnail: row.thumbnail || '',
-        summary:   row.summary   || '',
+        summary:   (row.summary === '기사 내용을 확인하려면 링크를 클릭하세요.' ? '' : row.summary) || '',
         category:  row.category  || 'AI 진단',
         readTime:  row.read_time || '3분',
         tags:      row.tags      || [],
