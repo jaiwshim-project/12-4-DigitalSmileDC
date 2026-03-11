@@ -402,6 +402,17 @@
                 <figcaption class="text-center text-xs text-gray-400 mt-1">신경 위치 확인</figcaption>
               </figure>
             </div>
+            <!-- CT mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#F0F7FF;border:1px solid #BFDBFE;">
+              <div class="text-xs font-bold mb-2" style="color:#2f98d4;">🦷 CT 분석 · 치아별 이상 위치</div>
+              <svg id="miniMapCT" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-400 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
+            </div>
             <ul class="space-y-3">
               <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#7 부위:</strong> 치조골 소실 62% · 임플란트 식립 가능 (골폭 7.2mm 확인)</div></li>
               <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">하악 대구치 부위:</strong> 골밀도 710 HU · 정상(800HU) 이하 · 하악 전체 스케일링 권장</div></li>
@@ -439,6 +450,17 @@
                 <figcaption class="text-center text-xs text-gray-400 mt-1">교합 분석</figcaption>
               </figure>
             </div>
+            <!-- 구강스캐너 mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#F0FDFC;border:1px solid #99F6E4;">
+              <div class="text-xs font-bold mb-2" style="color:#2EC4B6;">🦷 구강스캐너 분석 · 치아별 이상 위치</div>
+              <svg id="miniMapScan" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-400 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
+            </div>
             <ul class="space-y-3">
               <li class="flex gap-3 text-sm p-3 rounded-xl bg-red-50"><span class="text-red-500 mt-0.5">●</span><div><strong class="text-red-700">#6 치아:</strong> 치아 구조 30% 잔존 · 보존 불가 · 크라운 즉시 권장</div></li>
               <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">전치부 심미:</strong> 스캔 결과 전치부 4개 치아 색조 불일치 (A3.5 vs A2)</div></li>
@@ -474,6 +496,17 @@
                      class="w-full h-24 object-cover rounded-lg" onerror="this.closest('figure').style.display='none'">
                 <figcaption class="text-center text-xs text-gray-400 mt-1">스마일 디자인</figcaption>
               </figure>
+            </div>
+            <!-- 페이스스캐너 mini tooth map -->
+            <div class="my-3 p-3 rounded-xl" style="background:#FFF7ED;border:1px solid #FED7AA;">
+              <div class="text-xs font-bold mb-2" style="color:#F4A261;">🦷 페이스스캐너 분석 · 심미 치아 위치</div>
+              <svg id="miniMapFace" viewBox="0 0 334 70" class="w-full max-w-sm block mx-auto"></svg>
+              <div class="flex gap-4 text-xs text-gray-400 mt-1 justify-center">
+                <span><span style="color:#E63946">■</span> 즉시치료</span>
+                <span><span style="color:#F4A261">■</span> 주의</span>
+                <span><span style="color:#2EC4B6">■</span> 정상</span>
+                <span><span style="color:#9CA3AF">■</span> 결손</span>
+              </div>
             </div>
             <ul class="space-y-3">
               <li class="flex gap-3 text-sm p-3 rounded-xl bg-yellow-50"><span class="text-yellow-500 mt-0.5">●</span><div><strong class="text-yellow-700">안면 중선:</strong> 상악 중선과 안면 중선 2.3mm 편위 (왼쪽) · 교정 고려 가능</div></li>
@@ -781,6 +814,61 @@
       txt.textContent = side === 'R' ? '← 환자 우측' : '환자 좌측 →';
       svg.appendChild(txt);
     });
+
+    // ---- Mini Tooth Maps (for 장비별 소견) ----
+    (function buildMiniMaps() {
+      const ns = 'http://www.w3.org/2000/svg';
+      const G='#2EC4B6', R='#E63946', Y='#F4A261', X='#9CA3AF';
+      const startX=28, step=19, toothW=17, toothH=24, upperY=8, lowerY=40;
+
+      function build(svgId, upperColors, lowerColors) {
+        const svg = document.getElementById(svgId);
+        if (!svg) return;
+        [
+          {colors: upperColors, y: upperY, label:'상악'},
+          {colors: lowerColors, y: lowerY, label:'하악'}
+        ].forEach(({colors, y, label}) => {
+          const lt = document.createElementNS(ns,'text');
+          lt.setAttribute('x','3'); lt.setAttribute('y', y + toothH/2 + 4);
+          lt.setAttribute('font-size','8'); lt.setAttribute('fill','#9CA3AF');
+          lt.setAttribute('font-family',"'Noto Sans KR'"); lt.textContent = label;
+          svg.appendChild(lt);
+          colors.forEach((color, i) => {
+            const x = startX + i * step;
+            const rect = document.createElementNS(ns,'rect');
+            rect.setAttribute('x', x); rect.setAttribute('y', y);
+            rect.setAttribute('width', toothW); rect.setAttribute('height', toothH);
+            rect.setAttribute('rx','3'); rect.setAttribute('fill', color);
+            rect.setAttribute('opacity', color === X ? '0.45' : '0.88');
+            svg.appendChild(rect);
+          });
+        });
+        // R / L guide
+        [['← 우',28],['좌 →',310]].forEach(([txt,x]) => {
+          const el = document.createElementNS(ns,'text');
+          el.setAttribute('x',x); el.setAttribute('y','68');
+          el.setAttribute('font-size','7'); el.setAttribute('fill','#CBD5E1');
+          el.setAttribute('text-anchor', x===28?'start':'end');
+          el.setAttribute('font-family',"'Noto Sans KR'"); el.textContent=txt;
+          svg.appendChild(el);
+        });
+      }
+
+      // 3D CT: #7(상악좌측1대구치)=RED pos13, #19(하악좌측1대구치)=YELLOW pos13, 하악대구치=YELLOW pos12
+      build('miniMapCT',
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,R,G,G],
+        [X,G,G,G,G,G,G,G,G,G,G,G,Y,Y,G,X]);
+
+      // 구강스캐너: #6(상악좌측1소구치)=RED pos11, 전치부4개=YELLOW pos6~9
+      build('miniMapScan',
+        [G,G,G,G,G,G,Y,Y,Y,Y,G,R,G,G,G,G],
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G]);
+
+      // 페이스스캐너: 전치부 심미(중선편위·미소라인)=YELLOW pos6~9
+      build('miniMapFace',
+        [G,G,G,G,G,G,Y,Y,Y,Y,G,G,G,G,G,G],
+        [G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G]);
+    })();
 
     function showTooth(key, t) {
       const modal = document.getElementById('toothModal');
