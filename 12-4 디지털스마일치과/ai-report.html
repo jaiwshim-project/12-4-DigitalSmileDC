@@ -961,7 +961,16 @@
 
     // Scroll to section
     function scrollTo(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      const el = document.getElementById(id);
+      if (!el) return;
+      // Immediately reveal section (bypasses intersection observer delay)
+      el.classList.add('show');
+      el.scrollIntoView({ behavior: 'smooth' });
+      // Update active link immediately without waiting for scroll observer
+      const allSecs = ['secAI','secScore','secMap','secBone','secRisk','secPredict','secPriority','secEquip'];
+      document.querySelectorAll('#tocNav a').forEach((l, i) => {
+        l.className = allSecs.indexOf(id) === i ? 'sidebar-link active' : 'sidebar-link';
+      });
     }
 
     // Mobile menu toggle
@@ -985,10 +994,10 @@
       if (el) sectionObserver.observe(el);
     });
 
-    // Section animations
+    // Section animations — reveal as they enter viewport (very low threshold for instant feel)
     const animObserver = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
     document.querySelectorAll('.section-anim').forEach(el => animObserver.observe(el));
   </script>
   <!-- ===== FOOTER ===== -->
