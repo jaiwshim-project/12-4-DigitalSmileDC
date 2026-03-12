@@ -64,6 +64,18 @@
 }
 .save-area .btn-primary:hover { background:#f0f4ff }
 
+/* 참고 정보 카드 */
+.card-ref { background:linear-gradient(135deg,#f0fdfa 0%,#f7fffe 100%);border-color:rgba(13,148,136,.2) }
+.card-ref .card-title { color:#0f766e }
+.ref-path-item {
+  display:flex;align-items:center;gap:8px;
+  padding:6px 10px;margin-bottom:4px;
+  background:rgba(13,148,136,.08);border-radius:6px;font-size:12px;
+}
+.ref-path-item span:first-child { flex:1;color:var(--text1);word-break:break-all }
+.ref-path-item .ref-x { cursor:pointer;color:var(--text3);flex-shrink:0 }
+.ref-path-item .ref-x:hover { color:var(--red) }
+
 /* notice 배너 */
 .notice {
   background:linear-gradient(135deg,#eff6ff,#dbeafe);
@@ -135,7 +147,7 @@
     </div>
 
     <!-- AI 수준 -->
-    <div class="card card-ai">
+    <div class="card card-ai" style="margin-bottom:14px">
       <div class="card-title">AI 기능 수준</div>
       <div class="radio-group" id="aiLevel">
         <span class="radio-btn active" data-val="0" style="border-color:var(--border)">없음</span>
@@ -144,6 +156,20 @@
         <span class="radio-btn" data-val="3" style="">고급 (RAG/에이전트)</span>
       </div>
       <div style="margin-top:10px;font-size:11px;color:var(--text3)" id="aiLevelDesc">AI 기능을 사용하지 않습니다.</div>
+    </div>
+
+    <!-- 참고 정보 -->
+    <div class="card card-ref">
+      <div class="card-title">📂 참고 정보 (선택)</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:12px">폴더 경로를 입력하면 해당 폴더 내 자료를 분석하여 개발에 활용합니다.</div>
+      <div class="form-group" style="margin-bottom:0">
+        <label>참고 폴더 경로</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="refPathIn" placeholder="예: C:\Users\USER\Documents\프로젝트자료" style="flex:1" onkeydown="if(event.key==='Enter'){addRefPath();event.preventDefault()}">
+          <button class="btn btn-secondary" onclick="addRefPath()" style="white-space:nowrap;flex-shrink:0">+ 추가</button>
+        </div>
+        <div id="refPathList" style="margin-top:8px"></div>
+      </div>
     </div>
   </div>
 
@@ -198,6 +224,28 @@ document.getElementById('navArea').innerHTML = buildNav('1', false);
 document.getElementById('progressBar').innerHTML = buildProgress('1');
 
 let userTags = [];
+let refPaths = [];
+
+function addRefPath() {
+  const inp = document.getElementById('refPathIn');
+  const val = inp.value.trim();
+  if (!val || refPaths.includes(val)) { inp.value=''; return; }
+  refPaths.push(val);
+  renderRefPaths();
+  inp.value = '';
+}
+function removeRefPath(idx) {
+  refPaths.splice(idx, 1);
+  renderRefPaths();
+}
+function renderRefPaths() {
+  const list = document.getElementById('refPathList');
+  list.innerHTML = refPaths.map((p, i) => `
+    <div class="ref-path-item">
+      <span>📁 ${p}</span>
+      <span class="ref-x" onclick="removeRefPath(${i})">✕</span>
+    </div>`).join('');
+}
 
 function addTag(e) {
   if (e.key !== 'Enter') return;
@@ -270,7 +318,8 @@ function saveAndNext() {
     techStack: document.querySelector('#techStack .radio-btn.active')?.dataset.val || 'Next.js + FastAPI',
     scale: parseInt(document.querySelector('#projScale .radio-btn.active')?.dataset.val) || 1,
     aiLevel: parseInt(document.querySelector('#aiLevel .radio-btn.active')?.dataset.val) || 0,
-    features
+    features,
+    refPaths: [...refPaths]
   });
   location.href = '02-complexity.html';
 }
@@ -281,6 +330,7 @@ function loadSaved() {
   document.getElementById('projName').value = p.name || '';
   document.getElementById('projPurpose').value = p.purpose || '';
   if (Array.isArray(p.users)) { userTags = [...p.users]; renderTags(); }
+  if (Array.isArray(p.refPaths)) { refPaths = [...p.refPaths]; renderRefPaths(); }
   setRadio('techStack', p.techStack);
   setRadio('projScale', String(p.scale));
   setRadio('aiLevel', String(p.aiLevel));
